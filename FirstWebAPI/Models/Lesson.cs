@@ -6,8 +6,8 @@
 
         public string Name { get; set; }
 
-        public List<Theme> Themes { get; set; }
-
         public int CourseId { get; set; }
+
+        public List<Theme> Themes { get; set; }
     }
 }
