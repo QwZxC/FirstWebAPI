@@ -1,4 +1,5 @@
 ﻿using FirstWebAPI.Models;
+using FirstWebAPI.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FirstWebAPI.Controllers
@@ -10,42 +11,62 @@ namespace FirstWebAPI.Controllers
         #region HTTPGets
 
         [HttpGet("All", Name = "GetAllLessons")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Lesson>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LessonDTO>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<IEnumerable<Lesson>> GetAllLessons()
+        public ActionResult<IEnumerable<LessonDTO>> GetAllLessons()
         {
-            return Ok(Plan.Lessons);
+            IEnumerable<LessonDTO> lessons = Plan.Lessons.Select(lesson => new LessonDTO()
+            {
+                Id = lesson.Id,
+                Name = lesson.Name,
+                CourseId = lesson.CourseId,
+                Themes = lesson.Themes
+            });
+            return Ok(lessons);
         }
 
         [HttpGet("name:string", Name = "GetLessonsByName")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Lesson>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LessonDTO>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<IEnumerable<Lesson>> GetLessonsByName(string name)
+        public ActionResult<IEnumerable<LessonDTO>> GetLessonsByName(string name)
         {
-            var collection = Plan.Lessons.FindAll(lesson => lesson.Name == name);
-            if (collection.Count == 0) {
+            IEnumerable<LessonDTO> lessons = Plan.Lessons.FindAll(lesson => lesson.Name == name).Select(lesson => new LessonDTO()
+            {
+                Id = lesson.Id,
+                Name = lesson.Name,
+                CourseId = lesson.CourseId,
+                Themes = lesson.Themes
+            });
+            if (!lessons.Any())
+            {
                 return NotFound($"Занятия с именем '{name}' нет");
             }
-            return Ok(collection);
+            return Ok(lessons);
         }
 
         [HttpGet("{id:int}", Name = "GetLesonById")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Lesson))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LessonDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<Lesson> GetLesonById(int id)
+        public ActionResult<LessonDTO> GetLesonById(int id)
         {
             if (id <= 0) {
-                return BadRequest("Не верный Id(");
+                return BadRequest();
             }
             Lesson lesson = Plan.Lessons.Find(les => les.Id == id);
             if (lesson == null) {
-                return NotFound($"Занятия с id = {id} нет");
+                return NotFound($"Занятия с id = {id} не существует");
             }
-            return Ok(Plan.Lessons.Find(les => les.Id == id));
+            return Ok(new LessonDTO() 
+            {
+                Id = lesson.Id,
+                Name = lesson.Name,
+                CourseId= lesson.CourseId,
+                Themes = lesson.Themes
+            });
         }
 
         #endregion
@@ -53,37 +74,113 @@ namespace FirstWebAPI.Controllers
         #region HTTPDeletes
 
         [HttpDelete("name:string", Name = "DeleteLessonsByName")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Lesson>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LessonDTO>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<IEnumerable<Lesson>> DeleteLessonsByName(string name)
+        public ActionResult<IEnumerable<LessonDTO>> DeleteLessonsByName(string name)
         {
-            var collection = Plan.Lessons.FindAll(lesson => lesson.Name == name);
-            if (collection.Count == 0) {
-                return NotFound($"Занятия с именем '{name}' нет");
+            IEnumerable<Lesson> lessons = Plan.Lessons.FindAll(lesson => lesson.Name == name);
+
+            if (!lessons.Any())
+            {
+                return NotFound($"Занятий с именем '{name}' не существует ");
             }
+
+            lessons.ToList().ForEach(lesson =>
+            {
+                lesson.Themes.ForEach(theme => Plan.Themes.Remove(theme));
+            });
+
+            lessons.ToList().ForEach(lesson =>Plan.Lessons.Remove(lesson));
+            
             return Ok(Plan.Lessons);
         }
 
         [HttpDelete("{id:int}", Name = "DeleteLesonById")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Lesson>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LessonDTO>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<IEnumerable<Lesson>> DeleteLesonById(int id)
+        public ActionResult<IEnumerable<LessonDTO>> DeleteLesonById(int id)
         {
             if(id <= 0) {
                 return BadRequest("Неверный Id");
             }
-            var lesson = Plan.Lessons.Find(les => les.Id == id);
+            Lesson lesson = Plan.Lessons.Find(les => les.Id == id);
+            
             if (lesson == null) {
-                return NotFound($"Занятия с id = {id} нет");
+                return NotFound($"Занятия с id = {id} не существует");
             }
+            
+            lesson.Themes.ForEach(theme => Plan.Themes.Remove(theme));
+
             Plan.Lessons.Remove(lesson);
-            return Plan.Lessons;
+            
+            IEnumerable<LessonDTO> lessons = Plan.Lessons.Select(lesson => new LessonDTO()
+            {
+                Id = lesson.Id,
+                Name = lesson.Name,
+                CourseId = lesson.CourseId,
+                Themes = lesson.Themes
+            });
+            return Ok(lessons);
         }
 
         #endregion
+
+        #region HTTPPosts
+
+        [HttpPost]
+        [Route("Create", Name = "CreateLesson")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LessonDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(LessonDTO))]
+        public ActionResult<LessonDTO> CreateLesson([FromBody]LessonDTO model)
+        {
+            if (model == null)
+                return BadRequest();
+
+            int id = Plan.Lessons.LastOrDefault().Id + 1;
+            
+            Lesson lesson = new()
+            {
+                Id = id,
+                Name = model.Name,
+                CourseId = model.CourseId,
+            };
+
+            LinkTheme(lesson, model);
+
+            lesson.Themes = model.Themes;
+            Plan.Lessons.Add(lesson);
+            model.Id = lesson.Id; 
+            return Ok(model);
+        }
+
+        #endregion
+
+        private void LinkTheme(Lesson lesson, LessonDTO model)
+        {
+            model.Themes.ForEach(theme =>
+            {
+                var oldTheme = Plan.Themes.Find(dbTheme => theme.Id == dbTheme.Id);
+                var oldLesson = Plan.Lessons.Find(lesson => lesson.Themes.Exists(th => th.Id == oldTheme.Id));
+                oldLesson.Themes.Remove(oldTheme);
+
+                if (oldTheme != null)
+                {
+                    theme.Id = oldTheme.Id;
+                    theme.Name = oldTheme.Name;
+                    theme.LessonId = lesson.Id;
+                    Plan.Themes.Remove(oldTheme);
+                    Plan.Themes.Add(theme);
+                }
+                else
+                {
+                    theme.LessonId = lesson.Id;
+                    Plan.Themes.Add(theme);
+                }
+            });
+        }
     }
 }
