@@ -2,6 +2,7 @@
 using FirstWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using FirstWebAPI.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace FirstWebAPI.Controllers
 {
@@ -23,7 +24,7 @@ namespace FirstWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<IEnumerable<ThemeDTO>> GetAllThemes()
         {
-            IEnumerable<ThemeDTO> themes = Plan.Themes.Select(theme => new ThemeDTO()
+            IEnumerable<ThemeDTO> themes = _context.Themes.Select(theme => new ThemeDTO()
             {
                 Id = theme.Id,
                 Name = theme.Name,
@@ -39,7 +40,7 @@ namespace FirstWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<IEnumerable<LessonDTO>> GetThemeByName(string name)
         {
-            IEnumerable<ThemeDTO> themes = Plan.Themes.FindAll(theme => theme.Name == name).Select(lesson => new ThemeDTO()
+            IEnumerable<ThemeDTO> themes = _context.Themes.ToList().FindAll(theme => theme.Name == name).Select(lesson => new ThemeDTO()
             {
                 Id = lesson.Id,
                 Name = lesson.Name,
@@ -63,7 +64,7 @@ namespace FirstWebAPI.Controllers
             {
                 return BadRequest();
             }
-            Theme Theme = Plan.Themes.Find(thm => thm.Id == id);
+            Theme Theme = _context.Themes.ToList().Find(thm => thm.Id == id);
             if (Theme == null)
             {
                 return NotFound($"Темы с id = {id} не существует");
@@ -87,19 +88,19 @@ namespace FirstWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<IEnumerable<ThemeDTO>> DeleteThemeByName(string name)
         {
-            List<Theme> themes = Plan.Themes.FindAll(theme => theme.Name == name);
+            List<Theme> themes = _context.Themes.ToList().FindAll(theme => theme.Name == name);
 
             themes.ToList().ForEach(theme =>
             {
-                Plan.Lessons.Find(lesson => lesson.Id == theme.LessonId).Themes.Remove(theme);
-                Plan.Themes.Remove(theme);
+                _context.Lessons.ToList().Find(lesson => lesson.Id == theme.LessonId).Themes.Remove(theme);
+                _context.Themes.Remove(theme);
             });
 
             if (!themes.Any()) {
                 return NotFound($"Занятий с именем '{name}' не существует ");
             }
 
-            IEnumerable<ThemeDTO> newThemes = Plan.Themes.FindAll(theme => theme.Name == name).Select(theme => new ThemeDTO()
+            IEnumerable<ThemeDTO> newThemes = _context.Themes.ToList().FindAll(theme => theme.Name == name).Select(theme => new ThemeDTO()
             {
                 Id = theme.Id,
                 Name = theme.Name,
@@ -120,16 +121,16 @@ namespace FirstWebAPI.Controllers
                 return BadRequest("Неверный Id");
             }
 
-            Theme theme = Plan.Themes.Find(les => les.Id == id);
+            Theme theme = _context.Themes.ToList().Find(les => les.Id == id);
             if (theme == null) {
                 return NotFound($"Темы с id = {id} не существует");
             }
 
-            Plan.Lessons.Find(lesson => lesson.Themes.Remove(theme)).Themes.Remove(theme);
+            _context.Lessons.ToList().Find(lesson => lesson.Themes.Remove(theme)).Themes.Remove(theme);
 
-            Plan.Themes.Remove(theme);
+            _context.Themes.Remove(theme);
             
-            IEnumerable<ThemeDTO> themes = Plan.Themes.Select(theme => new ThemeDTO()
+            IEnumerable<ThemeDTO> themes = _context.Themes.Select(theme => new ThemeDTO()
             {
                 Id = theme.Id,
                 Name = theme.Name,
@@ -153,7 +154,7 @@ namespace FirstWebAPI.Controllers
             if (model == null)
                 return BadRequest();
 
-            Lesson lesson = Plan.Lessons.Find(lesson => lesson.Id == model.LessonId);
+            Lesson lesson = _context.Lessons.ToList().Find(lesson => lesson.Id == model.LessonId);
 
             if (lesson == null)
                 return NotFound($"Занятия с Id = {model.LessonId} не найдено");
@@ -165,8 +166,10 @@ namespace FirstWebAPI.Controllers
                 LessonId = model.LessonId,
             };
 
-            lesson.Themes.Add(theme);
+            _context.Themes.Add(theme);
 
+            lesson.Themes.Add(theme);
+            _context.SaveChanges();
             return Ok(lesson);
         }
 
