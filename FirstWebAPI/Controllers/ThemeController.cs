@@ -1,6 +1,7 @@
 ﻿using FirstWebAPI.Models.DTO;
 using FirstWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using FirstWebAPI.Context;
 
 namespace FirstWebAPI.Controllers
 {
@@ -8,6 +9,12 @@ namespace FirstWebAPI.Controllers
     [ApiController]
     public class ThemeController : ControllerBase
     {
+        private readonly ApplicationDbContext _context;
+
+        public ThemeController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         #region HTTPGets
 

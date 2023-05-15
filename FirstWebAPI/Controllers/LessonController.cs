@@ -1,4 +1,5 @@
-﻿using FirstWebAPI.Models;
+﻿using FirstWebAPI.Context;
+using FirstWebAPI.Models;
 using FirstWebAPI.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,13 @@ namespace FirstWebAPI.Controllers
     [ApiController]
     public class LessonController : ControllerBase
     {
+        private readonly ApplicationDbContext _context;
+
+        public LessonController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         #region HTTPGets
 
         [HttpGet("All", Name = "GetAllLessons")]

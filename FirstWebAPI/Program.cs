@@ -1,3 +1,5 @@
+using FirstWebAPI.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace FirstWebAPI
 {
@@ -10,6 +12,11 @@ namespace FirstWebAPI
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            //Register
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -28,6 +35,10 @@ namespace FirstWebAPI
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=swagger}/{action=Index}/");
 
             app.Run();
         }
