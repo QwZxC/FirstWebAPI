@@ -1,10 +1,10 @@
-﻿using FirstWebAPI.Models.DTO;
-using FirstWebAPI.Models;
+﻿using WebJournal.Models.DTO;
+using WebJournal.Models;
 using Microsoft.AspNetCore.Mvc;
-using FirstWebAPI.Context;
+using WebJournal.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace FirstWebAPI.Controllers
+namespace WebJournal.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

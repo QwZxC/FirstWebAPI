@@ -1,7 +1,7 @@
-using FirstWebAPI.Context;
+using WebJournal.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace FirstWebAPI
+namespace WebJournal
 {
     public class Program
     {

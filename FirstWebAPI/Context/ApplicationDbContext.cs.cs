@@ -1,7 +1,7 @@
-﻿using FirstWebAPI.Models;
+﻿using WebJournal.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace FirstWebAPI.Context 
+namespace WebJournal.Context 
 {
     public class ApplicationDbContext : DbContext
     {

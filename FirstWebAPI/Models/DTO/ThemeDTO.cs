@@ -1,4 +1,4 @@
-﻿namespace FirstWebAPI.Models.DTO
+﻿namespace WebJournal.Models.DTO
 {
     public record ThemeDTO
     {
