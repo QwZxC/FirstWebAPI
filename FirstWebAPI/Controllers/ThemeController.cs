@@ -145,7 +145,7 @@ namespace FirstWebAPI.Controllers
 
         [HttpPost]
         [Route("Create", Name = "CreateTheme")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LessonDTO))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(LessonDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(LessonDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(LessonDTO))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(LessonDTO))]
@@ -170,7 +170,7 @@ namespace FirstWebAPI.Controllers
 
             lesson.Themes.Add(theme);
             _context.SaveChanges();
-            return Ok(lesson);
+            return Created("", theme);
         }
 
         #endregion

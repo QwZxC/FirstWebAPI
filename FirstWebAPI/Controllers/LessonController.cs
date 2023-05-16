@@ -161,7 +161,7 @@ namespace FirstWebAPI.Controllers
 
         [HttpPost]
         [Route("Create", Name = "CreateLesson")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LessonDTO))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(LessonDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(LessonDTO))]
         public ActionResult<LessonDTO> CreateLesson([FromBody]LessonDTO model)
         {
@@ -180,7 +180,7 @@ namespace FirstWebAPI.Controllers
             _context.Lessons.Add(lesson);
             _context.SaveChanges();
             model.Id = lesson.Id; 
-            return Ok(model);
+            return Created("",model);
         }
 
         #endregion
@@ -191,7 +191,8 @@ namespace FirstWebAPI.Controllers
             {
                 var oldTheme = _context.Themes.ToList().Find(dbTheme => theme.Id == dbTheme.Id);
                 var oldLesson = _context.Lessons.ToList().Find(lesson => lesson.Themes.Exists(th => th.Id == oldTheme.Id));
-                oldLesson.Themes.Remove(oldTheme);
+                if(oldLesson != null)
+                    oldLesson.Themes.Remove(oldTheme);
 
                 if (oldTheme != null)
                 {
