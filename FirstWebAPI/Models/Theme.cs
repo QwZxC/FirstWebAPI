@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FirstWebAPI.Models
+namespace WebJournal.Models
 {
     public class Theme
     {
