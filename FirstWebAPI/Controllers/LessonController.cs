@@ -16,6 +16,8 @@ namespace FirstWebAPI.Controllers
         {
             _context = context;
         }
+        
+        #region HTTP
 
         #region HTTPGets
 
@@ -182,6 +184,39 @@ namespace FirstWebAPI.Controllers
             model.Id = lesson.Id; 
             return Created("",model);
         }
+
+        #endregion
+
+        #region HTTPPut
+
+        [HttpPut]
+        [Route("Update")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LessonDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(LessonDTO))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(LessonDTO))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(LessonDTO))]
+        public ActionResult<LessonDTO> UpdateLesson([FromBody] LessonDTO model)
+        {
+            if (model == null || model.Id <= 0 || model.Themes.Exists(theme => theme.LessonId != model.Id)) {
+                return BadRequest();
+            }
+
+            Lesson existingLesson = _context.Lessons.ToList().Find(lesson => lesson.Id == model.Id);
+
+            if (existingLesson == null) {
+                return NotFound($"Занятие с Id = {model.Id} не найдено");
+            }
+
+            existingLesson.Name = model.Name;
+            existingLesson.CourseId = model.CourseId;
+            existingLesson.Themes = model.Themes;
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+        #endregion
 
         #endregion
 
