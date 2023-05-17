@@ -17,6 +17,8 @@ namespace WebJournal.Controllers
             _context = context;
         }
 
+        #region HTTP
+
         #region HTTPGets
 
         [HttpGet("All", Name = "GetAllThemes")]
@@ -96,7 +98,8 @@ namespace WebJournal.Controllers
                 _context.Themes.Remove(theme);
             });
 
-            if (!themes.Any()) {
+            if (!themes.Any()) 
+            {
                 return NotFound($"Занятий с именем '{name}' не существует ");
             }
 
@@ -117,12 +120,14 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<IEnumerable<ThemeDTO>> DeleteThemeById(int id)
         {
-            if (id <= 0) {
+            if (id <= 0)
+            {
                 return BadRequest("Неверный Id");
             }
 
             Theme theme = _context.Themes.ToList().Find(les => les.Id == id);
-            if (theme == null) {
+            if (theme == null)
+            {
                 return NotFound($"Темы с id = {id} не существует");
             }
 
@@ -141,7 +146,7 @@ namespace WebJournal.Controllers
 
         #endregion
 
-        #region HTTPPost
+        #region HTTPPosts
 
         [HttpPost]
         [Route("Create", Name = "CreateTheme")]
@@ -152,12 +157,16 @@ namespace WebJournal.Controllers
         public ActionResult<LessonDTO> CreateTheme([FromBody] ThemeDTO model)
         {
             if (model == null)
+            {
                 return BadRequest();
+            }
 
             Lesson lesson = _context.Lessons.ToList().Find(lesson => lesson.Id == model.LessonId);
 
             if (lesson == null)
+            {
                 return NotFound($"Занятия с Id = {model.LessonId} не найдено");
+            }
 
             Theme theme = new()
             {
@@ -172,6 +181,12 @@ namespace WebJournal.Controllers
             _context.SaveChanges();
             return Created("", theme);
         }
+
+        #endregion
+
+        #region HTTPPuts
+
+        #endregion
 
         #endregion
     }
