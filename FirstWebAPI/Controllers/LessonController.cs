@@ -208,7 +208,8 @@ namespace WebJournal.Controllers
 
             Lesson existingLesson = _context.Lessons.ToList().Find(lesson => lesson.Id == model.Id);
 
-            if (existingLesson == null) {
+            if (existingLesson == null) 
+            {
                 return NotFound($"Занятие с Id = {model.Id} не найдено");
             }
 

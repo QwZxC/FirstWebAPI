@@ -186,6 +186,43 @@ namespace WebJournal.Controllers
 
         #region HTTPPuts
 
+        [HttpPut]
+        [Route("Update")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ThemeDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ThemeDTO))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ThemeDTO))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ThemeDTO))]
+        public ActionResult<ThemeDTO> UpdateTheme([FromBody] ThemeDTO model)
+        {
+            if (model == null || model.Id <= 0 || model.LessonId <= 0)
+            {
+                return BadRequest();
+            }
+
+            Theme existingTheme = _context.Themes.Find(model.Id);
+            if (existingTheme == null)
+            {
+                return NotFound($"Тема с Id = {model.Id} не найдено");
+            }
+
+            Lesson newLesson = _context.Lessons.Find(model.LessonId);
+            if (newLesson == null)
+            {
+                return NotFound($"Занятие с Id = {model.LessonId} не найдено");
+            }
+
+            Lesson oldLesson = _context.Lessons.Find(existingTheme.LessonId);
+            oldLesson.Themes.Remove(existingTheme);
+
+            existingTheme.Name = model.Name;
+            existingTheme.LessonId = model.LessonId;
+            newLesson.Themes.Add(existingTheme);
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
         #endregion
 
         #endregion
