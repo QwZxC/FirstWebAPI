@@ -42,6 +42,14 @@ services:
     networks:
       - postgres
 
+  client:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    container_name: frontend_c
+    stdin_open: true
+    tty: true
+
 networks:
   postgres:
     driver: bridge

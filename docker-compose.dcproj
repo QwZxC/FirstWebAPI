@@ -14,5 +14,34 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="frontend\.dockerignore" />
+    <None Include="frontend\.gitignore" />
+    <None Include="frontend\Dockerfile" />
+    <None Include="frontend\obj\Docker\CanonicalServiceNames.cache" />
+    <None Include="frontend\package-lock.json" />
+    <None Include="frontend\package.json" />
+    <None Include="frontend\public\favicon.ico" />
+    <None Include="frontend\public\index.html" />
+    <None Include="frontend\public\logo192.png" />
+    <None Include="frontend\public\logo512.png" />
+    <None Include="frontend\public\manifest.json" />
+    <None Include="frontend\public\robots.txt" />
+    <None Include="frontend\README.md" />
+    <None Include="frontend\src\actions\fetchAllLessons.ts" />
+    <None Include="frontend\src\App.css" />
+    <None Include="frontend\src\App.tsx" />
+    <None Include="frontend\src\components\Header.tsx" />
+    <None Include="frontend\src\hooks\redux.ts" />
+    <None Include="frontend\src\index.css" />
+    <None Include="frontend\src\index.tsx" />
+    <None Include="frontend\src\models\ILesson.ts" />
+    <None Include="frontend\src\models\ITheme.ts" />
+    <None Include="frontend\src\store\slices\lessonSlice.ts" />
+    <None Include="frontend\src\store\store.ts" />
+    <None Include="frontend\tsconfig.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="frontend\obj\Docker\empty\" />
+    <Folder Include="frontend\src\types\" />
   </ItemGroup>
 </Project>
