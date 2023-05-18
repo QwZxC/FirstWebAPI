@@ -23,6 +23,9 @@ namespace WebJournal
 
             var app = builder.Build();
 
+            builder.Services.AddCors();
+            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"));
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

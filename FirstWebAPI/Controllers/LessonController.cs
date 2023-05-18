@@ -134,12 +134,14 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<IEnumerable<LessonDTO>> DeleteLesonById(int id)
         {
-            if(id <= 0) {
+            if(id <= 0) 
+            {
                 return BadRequest("Неверный Id");
             }
             Lesson lesson = _context.Lessons.ToList().Find(les => les.Id == id);
             
-            if (lesson == null) {
+            if (lesson == null) 
+            {
                 return NotFound($"Занятия с id = {id} не существует");
             }
             
@@ -168,7 +170,9 @@ namespace WebJournal.Controllers
         public ActionResult<LessonDTO> CreateLesson([FromBody]LessonDTO model)
         {
             if (model == null)
+            {
                 return BadRequest();
+            }
             
             Lesson lesson = new()
             {
@@ -187,7 +191,7 @@ namespace WebJournal.Controllers
 
         #endregion
 
-        #region HTTPPut
+        #region HTTPPuts
 
         [HttpPut]
         [Route("Update")]
@@ -197,13 +201,15 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(LessonDTO))]
         public ActionResult<LessonDTO> UpdateLesson([FromBody] LessonDTO model)
         {
-            if (model == null || model.Id <= 0 || model.Themes.Exists(theme => theme.LessonId != model.Id)) {
+            if (model == null || model.Id <= 0 || model.Themes.Exists(theme => theme.LessonId != model.Id)) 
+            {
                 return BadRequest();
             }
 
             Lesson existingLesson = _context.Lessons.ToList().Find(lesson => lesson.Id == model.Id);
 
-            if (existingLesson == null) {
+            if (existingLesson == null) 
+            {
                 return NotFound($"Занятие с Id = {model.Id} не найдено");
             }
 
@@ -226,8 +232,11 @@ namespace WebJournal.Controllers
             {
                 var oldTheme = _context.Themes.ToList().Find(dbTheme => theme.Id == dbTheme.Id);
                 var oldLesson = _context.Lessons.ToList().Find(lesson => lesson.Themes.Exists(th => th.Id == oldTheme.Id));
+                
                 if(oldLesson != null)
+                {
                     oldLesson.Themes.Remove(oldTheme);
+                }
 
                 if (oldTheme != null)
                 {
