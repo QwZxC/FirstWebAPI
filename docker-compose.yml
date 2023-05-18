@@ -4,13 +4,14 @@ services:
   webjournal:
     container_name: "Web_Api"
     image: ${DOCKER_REGISTRY-}webjournal
-    ports:
-      - "1234:1234"
     build:
       context: .
       dockerfile: FirstWebAPI/Dockerfile
     depends_on:
       - postgres
+    ports:
+      - "443:443"
+    
   postgres:
     container_name: "postgresDB"
     image: postgres:15.3
