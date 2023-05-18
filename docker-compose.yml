@@ -1,0 +1,53 @@
+version: '3.4'
+
+services:
+  webjournal:
+    container_name: "Web_Api"
+    image: ${DOCKER_REGISTRY-}webjournal
+    ports:
+      - "1234:1234"
+    build:
+      context: .
+      dockerfile: FirstWebAPI/Dockerfile
+    depends_on:
+      - postgres
+  postgres:
+    container_name: "postgresDB"
+    image: postgres:15.3
+    environment:
+      POSTGRES_DB: DenisDb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 301600
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - postgres
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:5.7
+    environment:
+      PGADMIN_DEFAULT_EMAIL: your@mail.com 
+      PGADMIN_DEFAULT_PASSWORD: postgresmaster
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    driver: bridge
