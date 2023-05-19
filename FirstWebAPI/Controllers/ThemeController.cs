@@ -90,27 +90,31 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<IEnumerable<ThemeDTO>> DeleteThemeByName(string name)
         {
-            List<Theme> themes = _context.Themes.ToList().FindAll(theme => theme.Name == name);
-
-            themes.ToList().ForEach(theme =>
+            name.Trim();
+            if (string.IsNullOrWhiteSpace(name))
             {
-                _context.Lessons.ToList().Find(lesson => lesson.Id == theme.LessonId).Themes.Remove(theme);
-                _context.Themes.Remove(theme);
-            });
+                return BadRequest();
+            }
 
-            if (!themes.Any()) 
+            if (!_context.Themes.Any(theme => theme.Name == name))
             {
                 return NotFound($"Занятий с именем '{name}' не существует ");
             }
 
-            IEnumerable<ThemeDTO> newThemes = _context.Themes.ToList().FindAll(theme => theme.Name == name).Select(theme => new ThemeDTO()
+            List<Theme> themesForRemove = _context.Themes.ToList().FindAll(theme => theme.Name == name);
+
+            themesForRemove.ForEach(theme => _context.Themes.Remove(theme));
+
+            _context.SaveChanges();
+
+            IEnumerable<ThemeDTO> newThemes = _context.Themes.Select(theme => new ThemeDTO()
             {
                 Id = theme.Id,
                 Name = theme.Name,
                 LessonId = theme.LessonId
             });
 
-            return Ok(newThemes);
+            return Ok($"удалено {themesForRemove.Count} записей");
         }
 
         [HttpDelete("{id:int}", Name = "DeleteThemeById")]
