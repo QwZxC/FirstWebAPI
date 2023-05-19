@@ -230,7 +230,7 @@ namespace WebJournal.Controllers
         {
             List<Theme> oldThemes = _context.Themes.ToList().FindAll(dbTheme =>
             {
-                if (model.Themes.Find(theme => theme.Id == dbTheme.Id) != null)
+                if (model.Themes.Any(theme => theme.Id == dbTheme.Id))
                     return true;
                 return false;
             });
