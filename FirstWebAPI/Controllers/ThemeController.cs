@@ -90,6 +90,7 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<IEnumerable<ThemeDTO>> DeleteThemeByName(string name)
         {
+            name.Trim();
             if (string.IsNullOrWhiteSpace(name))
             {
                 return BadRequest();
