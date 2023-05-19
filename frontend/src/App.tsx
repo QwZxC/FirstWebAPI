@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useAppDispatch } from './hooks/redux'
 import { fetchAllLessons } from './actions/fetchAllLessons';
 import { LessonsList } from './components/LessonsList';
+import { FormAddLesson } from './components/FormAddLesson';
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -13,6 +14,7 @@ const App = () => {
   return (
     <div>
       <LessonsList />
+      <FormAddLesson />
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchAllLessons } from "../../actions/fetchAllLessons";
 import { ILesson } from "../../models/ILesson";
+import { addLesson } from './../../actions/addLesson';
 
 interface LessonState {
     isLoading: boolean,
@@ -31,6 +32,16 @@ const lessonSlice = createSlice({
                 state.isLoading = false
                 state.lessons = action.payload
             })
+
+            .addCase(addLesson.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.lessons.push(action.payload)
+            })
+            .addCase(addLesson.pending, (state) => {
+                state.isLoading = true
+                state.error = null
+            })
+
             .addMatcher(isError, (state, action: PayloadAction<string>) => {
                 state.isLoading = false
                 state.error = action.payload
