@@ -180,7 +180,7 @@ namespace WebJournal.Controllers
                 CourseId = model.CourseId,
             };
 
-            LinkTheme(lesson, model);
+            UnLinkTheme(model);
 
             lesson.Themes = model.Themes;
             _context.Lessons.Add(lesson);
@@ -226,32 +226,23 @@ namespace WebJournal.Controllers
 
         #endregion
 
-        private void LinkTheme(Lesson lesson, LessonDTO model)
+        private void UnLinkTheme(LessonDTO model)
         {
-            model.Themes.ForEach(theme =>
+            List<Theme> oldThemes = _context.Themes.ToList().FindAll(dbTheme =>
             {
-                var oldTheme = _context.Themes.ToList().Find(dbTheme => theme.Id == dbTheme.Id);
-                var oldLesson = _context.Lessons.ToList().Find(lesson => lesson.Themes.Exists(th => th.Id == oldTheme.Id));
-                
-                if(oldLesson != null)
-                {
-                    oldLesson.Themes.Remove(oldTheme);
-                }
-
-                if (oldTheme != null)
-                {
-                    theme.Id = oldTheme.Id;
-                    theme.Name = oldTheme.Name;
-                    theme.LessonId = lesson.Id;
-                    _context.Themes.Remove(oldTheme);
-                    _context.Themes.Add(theme);
-                }
-                else
-                {
-                    theme.LessonId = lesson.Id;
-                    _context.Themes.Add(theme);
-                }
+                if (model.Themes.Any(theme => theme.Id == dbTheme.Id))
+                    return true;
+                return false;
             });
+
+            oldThemes.ForEach(theme => 
+            {
+                var oldLesson = _context.Lessons.Find(theme.LessonId);
+                oldLesson.Themes.Remove(theme);
+                _context.Themes.Remove(theme);
+            });
+
+            _context.SaveChanges();
         }
     }
 }
