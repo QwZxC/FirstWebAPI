@@ -148,7 +148,9 @@ namespace WebJournal.Controllers
             lesson.Themes.ForEach(theme => _context.Themes.Remove(theme));
 
             _context.Lessons.Remove(lesson);
-            
+
+            _context.SaveChangesAsync();
+
             IEnumerable<LessonDTO> lessons = _context.Lessons.Select(lesson => new LessonDTO()
             {
                 Id = lesson.Id,
