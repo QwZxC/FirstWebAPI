@@ -9,8 +9,8 @@ export const LessonsList = () => {
   return (
     <div>
       {isLoading && <p>загрузка</p>}
-
       {isError && <p>{error}</p>}
+      
       {!isError && lessons.length === 0 ? (
         <h1>Занятий нет</h1>
       ) : (

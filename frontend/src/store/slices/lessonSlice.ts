@@ -38,7 +38,6 @@ const lessonSlice = createSlice({
                 state.lessons.push(action.payload)
             })
             .addCase(addLesson.pending, (state) => {
-                state.isLoading = true
                 state.error = null
             })
 
