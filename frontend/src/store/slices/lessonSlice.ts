@@ -1,7 +1,9 @@
 import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchAllLessons } from "../../actions/fetchAllLessons";
+import { findLessonByName } from "../../actions/findLessonByName";
 import { ILesson } from "../../models/ILesson";
 import { addLesson } from './../../actions/addLesson';
+import { deleteLessonByID } from './../../actions/deleteLessonByID';
 
 interface LessonState {
     isLoading: boolean,
@@ -12,16 +14,13 @@ interface LessonState {
 const initialState: LessonState = {
     isLoading: false,
     error: null,
-    lessons: []
-
+    lessons: [],
 }
 
 const lessonSlice = createSlice({
     initialState,
     name: "lesson",
-    reducers: {
-        
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(fetchAllLessons.pending, (state) => {
@@ -39,6 +38,19 @@ const lessonSlice = createSlice({
             })
             .addCase(addLesson.pending, (state) => {
                 state.error = null
+            })
+
+            .addCase(deleteLessonByID.fulfilled, (state, action) => {
+                state.lessons.filter(lesson => lesson.id !== action.payload.id)
+            })
+
+            .addCase(findLessonByName.pending, (state) => {
+                state.isLoading = true
+                state.error = null
+            })
+            .addCase(findLessonByName.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.lessons = action.payload
             })
 
             .addMatcher(isError, (state, action: PayloadAction<string>) => {
