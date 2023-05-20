@@ -232,7 +232,7 @@ namespace WebJournal.Controllers
 
         #endregion
 
-        private void UnLinkTheme(LessonDTO model)
+        private async void UnLinkTheme(LessonDTO model)
         {
             List<Theme> oldThemes = _context.Themes.ToList().FindAll(dbTheme =>
             {
@@ -248,7 +248,7 @@ namespace WebJournal.Controllers
                 _context.Themes.Remove(theme);
             });
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }
