@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { ILesson } from './../models/ILesson';
 
-export const deleteLessonByID = createAsyncThunk<ILesson, number, { rejectValue: string }>(
+export const deleteLessonByID = createAsyncThunk<ILesson[], number, { rejectValue: string }>(
     "lessons/deleteLessonById",
     async (id, { rejectWithValue }) => {
         try {
