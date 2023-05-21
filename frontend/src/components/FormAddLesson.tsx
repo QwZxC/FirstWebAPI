@@ -8,6 +8,7 @@ export const FormAddLesson = () => {
   const [name, setName] = useState<string>('')
 
 	const submitClickHandler = () => {
+    if (name.length === 0) return
 		dispatch(addLesson({ name, themes: [], courseId: 0 }))
 		setName('')
 	}

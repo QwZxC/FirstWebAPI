@@ -19,8 +19,7 @@ export const FindLesson = () => {
   const searchCnangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setSearch(value)
-    console.log(value)
-    debounceSearchByString(value)
+    debounceSearchByString(value.trim())
   }
 
   return (
