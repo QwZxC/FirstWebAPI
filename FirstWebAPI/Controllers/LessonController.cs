@@ -201,7 +201,7 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(LessonDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(LessonDTO))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(LessonDTO))]
-        public ActionResult<LessonDTO> UpdateLesson([FromBody] LessonDTO model)
+        public async Task<ActionResult<LessonDTO>> UpdateLesson([FromBody] LessonDTO model)
         {
             if (model == null || model.Id <= 0 || model.Themes.Exists(theme => theme.LessonId != model.Id)) 
             {
@@ -218,10 +218,9 @@ namespace WebJournal.Controllers
             existingLesson.Name = model.Name;
             existingLesson.CourseId = model.CourseId;
             existingLesson.Themes = model.Themes;
-
             _context.SaveChanges();
 
-            return Ok();
+            return Ok(model);
         }
 
         #endregion
