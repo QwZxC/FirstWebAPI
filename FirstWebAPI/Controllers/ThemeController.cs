@@ -159,15 +159,14 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(LessonDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(LessonDTO))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(LessonDTO))]
-        public ActionResult<LessonDTO> CreateTheme([FromBody] ThemeDTO model)
+        public async Task<ActionResult<LessonDTO>> CreateTheme([FromBody] ThemeDTO model)
         {
             if (model == null)
             {
                 return BadRequest();
             }
 
-            Lesson lesson = _context.Lessons.ToList().Find(lesson => lesson.Id == model.LessonId);
-
+            Lesson lesson = await _context.Lessons.FirstOrDefaultAsync(lesson => lesson.Id == model.LessonId);
             if (lesson == null)
             {
                 return NotFound($"Занятия с Id = {model.LessonId} не найдено");
@@ -181,9 +180,8 @@ namespace WebJournal.Controllers
             };
 
             _context.Themes.Add(theme);
-
             lesson.Themes.Add(theme);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Created("", theme);
         }
 

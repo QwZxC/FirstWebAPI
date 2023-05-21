@@ -15,6 +15,7 @@ namespace WebJournal.Controllers
         public LessonController(ApplicationDbContext context)
         {
             _context = context;
+            _context.Lessons.Include(lesson => lesson.Themes);
         }
         
         #region HTTP
@@ -51,16 +52,11 @@ namespace WebJournal.Controllers
                 CourseId = lesson.CourseId,
                 Themes = lesson.Themes
             });
+
             if (!lessons.Any())
             {
                 return NotFound($"Занятия с именем '{name}' нет");
             }
-
-            lessons.ToList().ForEach(lesson => 
-            _context.Themes.ToList().ForEach(theme =>
-            {
-            }));
-            
             return Ok(lessons);
         }
 
@@ -77,15 +73,10 @@ namespace WebJournal.Controllers
             }
             
             Lesson lesson = await _context.Lessons.FirstOrDefaultAsync(les => les.Id == id);
-            
             if (lesson == null) 
             {
                 return NotFound($"Занятия с id = {id} не существует");
             }
-
-            _context.Themes.ToList().ForEach(theme =>
-            {
-            });
 
             return Ok(new LessonDTO() 
             {
@@ -142,8 +133,8 @@ namespace WebJournal.Controllers
             {
                 return BadRequest("Неверный Id");
             }
+
             Lesson lesson = await _context.Lessons.FirstOrDefaultAsync(les => les.Id == id);
-            
             if (lesson == null) 
             {
                 return NotFound($"Занятия с id = {id} не существует");
