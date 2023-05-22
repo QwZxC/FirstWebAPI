@@ -1,5 +1,5 @@
-import { useAppSelector } from './../hooks/redux'
-import { LessonsItem } from './LessonsItem'
+import { useAppSelector } from '../../hooks/redux'
+import { LessonsItem } from './LessonsItem.tsx/LessonsItem'
 
 export const LessonsList = () => {
   const { lessons, error, isLoading } = useAppSelector(state => state.lessons)

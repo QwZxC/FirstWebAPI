@@ -1,7 +1,7 @@
 import { FC } from 'react'
-import { useAppDispatch } from '../hooks/redux'
-import { ILesson } from '../models/ILesson'
-import { deleteLessonByID } from './../actions/deleteLessonByID';
+import { useAppDispatch } from '../../../hooks/redux'
+import { ILesson } from '../../../models/ILesson'
+import { deleteLessonByID } from '../../../actions/deleteLessonByID';
 
 interface LessonsItemProps {
   lesson: ILesson

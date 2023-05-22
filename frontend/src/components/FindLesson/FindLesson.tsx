@@ -1,8 +1,8 @@
 import { ChangeEvent, useState } from 'react'
-import { useAppDispatch } from '../hooks/redux'
-import { useDebounce } from './../hooks/useDebounce'
-import { findLessonByName } from './../actions/findLessonByName'
-import { fetchAllLessons } from '../actions/fetchAllLessons'
+import { useAppDispatch } from '../../hooks/redux'
+import { useDebounce } from '../../hooks/useDebounce'
+import { findLessonByName } from '../../actions/findLessonByName'
+import { fetchAllLessons } from '../../actions/fetchAllLessons'
 
 export const FindLesson = () => {
   const [search, setSearch] = useState('')

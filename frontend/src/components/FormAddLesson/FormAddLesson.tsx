@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useAppDispatch } from '../hooks/redux'
-import { addLesson } from './../actions/addLesson'
+import { useAppDispatch } from '../../hooks/redux'
+import { addLesson } from '../../actions/addLesson'
 
 export const FormAddLesson = () => {
   const dispatch = useAppDispatch()

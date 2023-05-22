@@ -1,9 +1,9 @@
 import { useEffect } from "react"
 import { fetchAllLessons } from "../actions/fetchAllLessons"
-import { FormAddLesson } from "../components/FormAddLesson"
-import { LessonsList } from "../components/LessonsList"
+import { FormAddLesson } from "../components/FormAddLesson/FormAddLesson"
+import { LessonsList } from "../components/LessonsList/LessonsList"
 import { useAppDispatch } from "../hooks/redux"
-import { FindLesson } from './../components/FindLesson';
+import { FindLesson } from '../components/FindLesson/FindLesson';
 
 export const LessonsPage = () => {
   const dispatch = useAppDispatch()
