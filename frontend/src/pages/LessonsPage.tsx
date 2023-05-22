@@ -1,9 +1,10 @@
-import { useEffect } from "react"
-import { fetchAllLessons } from "../actions/fetchAllLessons"
-import { FormAddLesson } from "../components/FormAddLesson/FormAddLesson"
-import { LessonsList } from "../components/LessonsList/LessonsList"
-import { useAppDispatch } from "../hooks/redux"
-import { FindLesson } from '../components/FindLesson/FindLesson';
+import { useEffect } from 'react'
+import { fetchAllLessons } from '../actions/fetchAllLessons'
+import { FormAddLesson } from '../components/FormAddLesson/FormAddLesson'
+import { LessonsList } from '../components/LessonsList/LessonsList'
+import { useAppDispatch } from '../hooks/redux'
+import { FindLesson } from '../components/FindLesson/FindLesson'
+import { Container } from '@mui/system'
 
 export const LessonsPage = () => {
   const dispatch = useAppDispatch()
@@ -14,9 +15,11 @@ export const LessonsPage = () => {
 
   return (
     <div>
-      <FindLesson />
-      <LessonsList />
-      <FormAddLesson />
+      <Container>
+        <FindLesson />
+        <LessonsList />
+        <FormAddLesson />
+      </Container>
     </div>
   )
 }

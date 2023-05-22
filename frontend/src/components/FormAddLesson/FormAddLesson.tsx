@@ -1,29 +1,31 @@
 import { useState } from 'react'
 import { useAppDispatch } from '../../hooks/redux'
 import { addLesson } from '../../actions/addLesson'
+import { Button, FormGroup, TextField } from '@mui/material'
 
 export const FormAddLesson = () => {
   const dispatch = useAppDispatch()
 
   const [name, setName] = useState<string>('')
 
-	const submitClickHandler = () => {
+  const submitClickHandler = () => {
     if (name.length === 0) return
-		dispatch(addLesson({ name, themes: [], courseId: 0 }))
-		setName('')
-	}
+    dispatch(addLesson({ name, themes: [], courseId: 0 }))
+    setName('')
+  }
 
   return (
-    <div>
-      <input
+    <FormGroup>
+      <TextField
+        sx={{ width: '100%' }}
         onChange={e => setName(e.target.value)}
-				value={name}
+        value={name}
         type='text'
-        placeholder='Введите название занятия...'
+        label='Введите название занятия...'
       />
-      <button onClick={submitClickHandler}>
+      <Button variant='outlined' onClick={submitClickHandler}>
         Добавить
-      </button>
-    </div>
+      </Button>
+    </FormGroup>
   )
 }

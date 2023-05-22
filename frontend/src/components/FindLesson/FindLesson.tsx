@@ -3,6 +3,7 @@ import { useAppDispatch } from '../../hooks/redux'
 import { useDebounce } from '../../hooks/useDebounce'
 import { findLessonByName } from '../../actions/findLessonByName'
 import { fetchAllLessons } from '../../actions/fetchAllLessons'
+import { TextField } from '@mui/material';
 
 export const FindLesson = () => {
   const [search, setSearch] = useState('')
@@ -23,10 +24,11 @@ export const FindLesson = () => {
   }
 
   return (
-    <input
+    <TextField
+      sx={{width: "100%"}}
       type='text'
       value={search}
-      placeholder='Поиск занятия...'
+      label='Поиск занятия...'
       onChange={searchCnangeHandler}
     />
   )
