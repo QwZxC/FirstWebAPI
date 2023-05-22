@@ -216,7 +216,7 @@ namespace WebJournal.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(model);
         }
 
         #endregion
