@@ -1,3 +1,4 @@
+import { List, Typography } from '@mui/material'
 import { useAppSelector } from '../../hooks/redux'
 import { LessonsItem } from './LessonsItem.tsx/LessonsItem'
 
@@ -9,13 +10,17 @@ export const LessonsList = () => {
 
   return (
     <div>
-      {isLoading && <p>загрузка</p>}
-      {isError && <p>{error}</p>}
+      {isLoading && <Typography>загрузка</Typography>}
+      {isError && <Typography>{error}</Typography>}
 
       {lessonsIsEmpty ? (
-        <h1>Занятий нет</h1>
+        <Typography variant='h3'>Занятий нет</Typography>
       ) : (
-        lessons.map(lesson => <LessonsItem lesson={lesson} key={lesson.id} />)
+        <List>
+          {lessons.map(lesson => (
+            <LessonsItem lesson={lesson} key={lesson.id} />
+          ))}
+        </List>
       )}
     </div>
   )
