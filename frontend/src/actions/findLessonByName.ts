@@ -6,7 +6,7 @@ export const findLessonByName = createAsyncThunk<ILesson[], string>(
     "lessons/findLessonByName",
     async (name) => {
         try {
-            const response = await axios.get<ILesson[]>(`https://localhost:443/api/Lesson/name:string?name=${name}`)
+            const response = await axios.get<ILesson[]>(`https://localhost:5000/api/Lesson/name:string?name=${name}`)
             return response.data
         } catch (err) {
             return []

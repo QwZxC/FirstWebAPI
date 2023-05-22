@@ -42,8 +42,8 @@ const lessonSlice = createSlice({
             })
 
             .addCase(deleteLessonByID.fulfilled, (state, action) => {
-                // state.lessons.filter(lesson => lesson.id !== action.payload.id)
                 state.lessons = action.payload
+                state.isLoading = false
             })
             .addCase(deleteLessonByID.pending, (state) => {
                 state.isLoading = true

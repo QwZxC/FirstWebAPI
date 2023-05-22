@@ -6,7 +6,7 @@ export const deleteLessonByID = createAsyncThunk<ILesson[], number, { rejectValu
     "lessons/deleteLessonById",
     async (id, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`https://localhost:443/api/Lesson/${id}`)
+            const response = await axios.delete(`https://localhost:5000/api/Lesson/${id}`)
             return response.data
         } catch (err) { 
             const error = err as Error

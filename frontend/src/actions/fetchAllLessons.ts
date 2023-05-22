@@ -6,7 +6,7 @@ export const fetchAllLessons = createAsyncThunk<ILesson[], undefined, { rejectVa
     "lessons/fetchAll",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get<ILesson[]>("https://localhost:443/api/Lesson/All")
+            const response = await axios.get<ILesson[]>("https://localhost:5000/api/Lesson/All")
             return response.data
         } catch (err) {
             const error = err as Error
