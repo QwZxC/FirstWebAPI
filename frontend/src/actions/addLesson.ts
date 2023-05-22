@@ -9,7 +9,7 @@ export const addLesson = createAsyncThunk<
 >('lessons/addLesson', async (lesson, { rejectWithValue }) => {
   try {
     const response = await axios.post(
-      'https://localhost/api/Lesson/Create',
+      'https://localhost:5000/api/Lesson/Create',
       lesson,
       { headers: { 'Content-Type': 'application/json; charset=utf-8' } },
     )
