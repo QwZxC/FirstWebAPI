@@ -24,9 +24,9 @@ namespace WebJournal.Controllers
         [HttpGet("All", Name = "GetAllThemes")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ThemeDTO>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<IEnumerable<ThemeDTO>> GetAllThemes()
+        public async Task<ActionResult<IEnumerable<ThemeDTO>>> GetAllThemes()
         {
-            IEnumerable<ThemeDTO> themes = _context.Themes.Select(theme => new ThemeDTO()
+            IQueryable<ThemeDTO> themes = _context.Themes.Select(theme => new ThemeDTO()
             {
                 Id = theme.Id,
                 Name = theme.Name,
@@ -40,7 +40,7 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<IEnumerable<LessonDTO>> GetThemeByName(string name)
+        public async Task<ActionResult<IEnumerable<LessonDTO>>> GetThemeByName(string name)
         {
             IEnumerable<ThemeDTO> themes = _context.Themes.ToList().FindAll(theme => theme.Name == name).Select(lesson => new ThemeDTO()
             {
@@ -60,17 +60,19 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<ThemeDTO> GetThemeById(int id)
+        public async Task<ActionResult<ThemeDTO>> GetThemeById(int id)
         {
             if (id <= 0)
             {
                 return BadRequest();
             }
-            Theme Theme = _context.Themes.ToList().Find(thm => thm.Id == id);
+            
+            Theme Theme = await _context.Themes.FirstOrDefaultAsync(thm => thm.Id == id);
             if (Theme == null)
             {
                 return NotFound($"Темы с id = {id} не существует");
             }
+            
             return Ok(new ThemeDTO()
             {
                 Id = Theme.Id,
@@ -88,7 +90,7 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<IEnumerable<ThemeDTO>> DeleteThemeByName(string name)
+        public async Task<ActionResult<IEnumerable<ThemeDTO>>> DeleteThemeByName(string name)
         {
             name.Trim();
             if (string.IsNullOrWhiteSpace(name))
@@ -105,7 +107,7 @@ namespace WebJournal.Controllers
 
             themesForRemove.ForEach(theme => _context.Themes.Remove(theme));
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             IEnumerable<ThemeDTO> newThemes = _context.Themes.Select(theme => new ThemeDTO()
             {
@@ -122,23 +124,22 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<IEnumerable<ThemeDTO>> DeleteThemeById(int id)
+        public async Task<ActionResult<IEnumerable<ThemeDTO>>> DeleteThemeById(int id)
         {
             if (id <= 0)
             {
                 return BadRequest("Неверный Id");
             }
 
-            Theme theme = _context.Themes.ToList().Find(les => les.Id == id);
+            Theme theme = await _context.Themes.FirstOrDefaultAsync(les => les.Id == id);
             if (theme == null)
             {
                 return NotFound($"Темы с id = {id} не существует");
             }
 
-            _context.Lessons.ToList().Find(lesson => lesson.Themes.Remove(theme)).Themes.Remove(theme);
-
             _context.Themes.Remove(theme);
-            
+
+            await _context.SaveChangesAsync();
             IEnumerable<ThemeDTO> themes = _context.Themes.Select(theme => new ThemeDTO()
             {
                 Id = theme.Id,
@@ -158,15 +159,14 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(LessonDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(LessonDTO))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(LessonDTO))]
-        public ActionResult<LessonDTO> CreateTheme([FromBody] ThemeDTO model)
+        public async Task<ActionResult<LessonDTO>> CreateTheme([FromBody] ThemeDTO model)
         {
             if (model == null)
             {
                 return BadRequest();
             }
 
-            Lesson lesson = _context.Lessons.ToList().Find(lesson => lesson.Id == model.LessonId);
-
+            Lesson lesson = await _context.Lessons.FirstOrDefaultAsync(lesson => lesson.Id == model.LessonId);
             if (lesson == null)
             {
                 return NotFound($"Занятия с Id = {model.LessonId} не найдено");
@@ -180,9 +180,8 @@ namespace WebJournal.Controllers
             };
 
             _context.Themes.Add(theme);
-
             lesson.Themes.Add(theme);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Created("", theme);
         }
 
@@ -196,33 +195,33 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ThemeDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ThemeDTO))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ThemeDTO))]
-        public ActionResult<ThemeDTO> UpdateTheme([FromBody] ThemeDTO model)
+        public async Task<ActionResult<ThemeDTO>> UpdateTheme([FromBody] ThemeDTO model)
         {
             if (model == null || model.Id <= 0 || model.LessonId <= 0)
             {
                 return BadRequest();
             }
 
-            Theme existingTheme = _context.Themes.Find(model.Id);
+            Theme existingTheme = await _context.Themes.FirstOrDefaultAsync(theme => theme.Id == model.Id);
             if (existingTheme == null)
             {
                 return NotFound($"Тема с Id = {model.Id} не найдено");
             }
 
-            Lesson newLesson = _context.Lessons.Find(model.LessonId);
+            Lesson newLesson = await _context.Lessons.FirstOrDefaultAsync(lesson => lesson.Id == model.LessonId);
             if (newLesson == null)
             {
                 return NotFound($"Занятие с Id = {model.LessonId} не найдено");
             }
 
-            Lesson oldLesson = _context.Lessons.Find(existingTheme.LessonId);
+            Lesson oldLesson = await _context.Lessons.FirstOrDefaultAsync(lesson => lesson.Id == existingTheme.LessonId);
             oldLesson.Themes.Remove(existingTheme);
 
             existingTheme.Name = model.Name;
             existingTheme.LessonId = model.LessonId;
             newLesson.Themes.Add(existingTheme);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
