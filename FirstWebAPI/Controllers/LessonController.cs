@@ -15,6 +15,7 @@ namespace WebJournal.Controllers
         public LessonController(ApplicationDbContext context)
         {
             _context = context;
+            _context.Lessons.Include(lesson => lesson.Themes);
         }
         
         #region HTTP
@@ -24,7 +25,7 @@ namespace WebJournal.Controllers
         [HttpGet("All", Name = "GetAllLessons")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LessonDTO>))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<IEnumerable<LessonDTO>> GetAllLessons()
+        public async Task<ActionResult<IEnumerable<LessonDTO>>> GetAllLessons()
         {
             IEnumerable<LessonDTO> lessons = _context.Lessons.Select(lesson => new LessonDTO()
             {
@@ -33,6 +34,7 @@ namespace WebJournal.Controllers
                 CourseId = lesson.CourseId,
                 Themes = lesson.Themes
             });
+
             return Ok(lessons);
         }
 
@@ -50,16 +52,11 @@ namespace WebJournal.Controllers
                 CourseId = lesson.CourseId,
                 Themes = lesson.Themes
             });
+
             if (!lessons.Any())
             {
                 return NotFound($"Занятия с именем '{name}' нет");
             }
-
-            lessons.ToList().ForEach(lesson => 
-            _context.Themes.ToList().ForEach(theme =>
-            {
-            }));
-            
             return Ok(lessons);
         }
 
@@ -68,20 +65,18 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<LessonDTO> GetLesonById(int id)
+        public async Task<ActionResult<LessonDTO>> GetLesonById(int id)
         {
-            if (id <= 0) {
+            if (id <= 0) 
+            {
                 return BadRequest();
             }
             
-            Lesson lesson = _context.Lessons.ToList().Find(les => les.Id == id);
-            if (lesson == null) {
+            Lesson lesson = await _context.Lessons.FirstOrDefaultAsync(les => les.Id == id);
+            if (lesson == null) 
+            {
                 return NotFound($"Занятия с id = {id} не существует");
             }
-
-            _context.Themes.ToList().ForEach(theme =>
-            {
-            });
 
             return Ok(new LessonDTO() 
             {
@@ -101,7 +96,7 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<IEnumerable<LessonDTO>> DeleteLessonsByName(string name)
+        public async Task<ActionResult<ActionResult<IEnumerable<LessonDTO>>>> DeleteLessonsByName(string name)
         {
             IEnumerable<Lesson> lessons = _context.Lessons.ToList().FindAll(lesson => lesson.Name == name);
 
@@ -114,7 +109,7 @@ namespace WebJournal.Controllers
 
             lessons.ToList().ForEach(lesson => _context.Lessons.Remove(lesson));
             
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             IEnumerable<LessonDTO> dbLessons = _context.Lessons.Select(lesson => new LessonDTO()
             {
@@ -132,14 +127,14 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<IEnumerable<LessonDTO>> DeleteLesonById(int id)
+        public async Task<ActionResult<IEnumerable<LessonDTO>>> DeleteLesonById(int id)
         {
             if(id <= 0) 
             {
                 return BadRequest("Неверный Id");
             }
-            Lesson lesson = _context.Lessons.ToList().Find(les => les.Id == id);
-            
+
+            Lesson lesson = await _context.Lessons.FirstOrDefaultAsync(les => les.Id == id);
             if (lesson == null) 
             {
                 return NotFound($"Занятия с id = {id} не существует");
@@ -149,7 +144,7 @@ namespace WebJournal.Controllers
 
             _context.Lessons.Remove(lesson);
 
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             IEnumerable<LessonDTO> lessons = _context.Lessons.Select(lesson => new LessonDTO()
             {
@@ -169,7 +164,7 @@ namespace WebJournal.Controllers
         [Route("Create", Name = "CreateLesson")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(LessonDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(LessonDTO))]
-        public ActionResult<LessonDTO> CreateLesson([FromBody]LessonDTO model)
+        public async Task<ActionResult<LessonDTO>> CreateLesson([FromBody]LessonDTO model)
         {
             if (model == null)
             {
@@ -186,7 +181,7 @@ namespace WebJournal.Controllers
 
             lesson.Themes = model.Themes;
             _context.Lessons.Add(lesson);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             model.Id = lesson.Id; 
             return Created("",model);
         }
@@ -208,7 +203,7 @@ namespace WebJournal.Controllers
                 return BadRequest();
             }
 
-            Lesson existingLesson = _context.Lessons.ToList().Find(lesson => lesson.Id == model.Id);
+            Lesson existingLesson = await _context.Lessons.FirstOrDefaultAsync(lesson => lesson.Id == model.Id);
 
             if (existingLesson == null) 
             {
@@ -218,7 +213,8 @@ namespace WebJournal.Controllers
             existingLesson.Name = model.Name;
             existingLesson.CourseId = model.CourseId;
             existingLesson.Themes = model.Themes;
-            _context.SaveChanges();
+
+            await _context.SaveChangesAsync();
 
             return Ok(model);
         }
@@ -227,7 +223,7 @@ namespace WebJournal.Controllers
 
         #endregion
 
-        private void UnLinkTheme(LessonDTO model)
+        private async void UnLinkTheme(LessonDTO model)
         {
             List<Theme> oldThemes = _context.Themes.ToList().FindAll(dbTheme =>
             {
@@ -243,7 +239,7 @@ namespace WebJournal.Controllers
                 _context.Themes.Remove(theme);
             });
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }
