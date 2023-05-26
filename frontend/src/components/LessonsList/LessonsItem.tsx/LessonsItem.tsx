@@ -1,8 +1,7 @@
 import { FC } from 'react'
-import { useAppDispatch } from '../../../hooks/redux'
 import { ILesson } from '../../../models/ILesson'
-import { deleteLessonByID } from '../../../actions/deleteLessonByID';
 import { Button, ListItem, Typography } from '@mui/material';
+import { useDeleteLessonMutation } from '../../../store/services/lessonsApi';
 
 interface LessonsItemProps {
   lesson: ILesson
@@ -11,14 +10,19 @@ interface LessonsItemProps {
 export const LessonsItem: FC<LessonsItemProps> = ({ lesson }) => {
   const { id, name, courseId } = lesson
 
-  const dispatch = useAppDispatch();
+  const [deleteLesson] = useDeleteLessonMutation()
+
+  const buttonClickHandler = async () => {
+    if (id === undefined) return
+    await deleteLesson(id)
+  }
 
   return (
     <ListItem sx={{gap: "10px"}}>
       <Typography>id: {id}</Typography>
       <Typography>name: {name}</Typography>
       <Typography>courseId: {courseId}</Typography>
-			<Button variant="outlined" onClick={() => id && dispatch(deleteLessonByID(id))}>Удалить</Button>
+			<Button variant="outlined" onClick={buttonClickHandler}>Удалить</Button>
     </ListItem>
   )
 }

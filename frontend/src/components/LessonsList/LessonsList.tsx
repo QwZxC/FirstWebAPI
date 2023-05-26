@@ -1,25 +1,46 @@
 import { List, Typography } from '@mui/material'
-import { useAppSelector } from '../../hooks/redux'
+import { Loader } from '../Loader/Loader'
 import { LessonsItem } from './LessonsItem.tsx/LessonsItem'
+import {
+  useGetAllLessonsQuery,
+  useGetLessonByStringQuery,
+} from '../../store/services/lessonsApi'
+import { FC, useEffect, useRef, useState } from 'react'
 
-export const LessonsList = () => {
-  const { lessons, error, isLoading } = useAppSelector(state => state.lessons)
+interface LessonsListProps {
+  search: string
+}
 
-  const isError = !isLoading && error
-  const lessonsIsEmpty = !isLoading && !isError && lessons.length === 0
+export const LessonsList: FC<LessonsListProps> = ({ search }) => {
+  const { data: lessons, isLoading, isError } = useGetAllLessonsQuery()
+  const [searchValue, setSearchValue] = useState('')
+  const timer = useRef<NodeJS.Timeout>()
+  const { data: searchLessons, error } = useGetLessonByStringQuery(searchValue)
+
+  useEffect(() => {
+    timer.current = setTimeout(() => {
+      setSearchValue(search)
+    }, 200)
+    return () => clearTimeout(timer.current)
+  }, [search])
+
+  const lessonsIsEmpty = !isLoading && !isError && lessons?.length === 0
 
   return (
     <div>
-      {isLoading && <Typography>загрузка</Typography>}
-      {isError && <Typography>{error}</Typography>}
+      {isLoading && <Loader />}
+      {isError && <Typography>Ошибка!</Typography>}
+      {lessonsIsEmpty && <Typography variant='h5'>Занятий нет</Typography>}
 
-      {lessonsIsEmpty ? (
-        <Typography variant='h3'>Занятий нет</Typography>
-      ) : (
+      {!lessonsIsEmpty && (
         <List>
-          {lessons.map(lesson => (
-            <LessonsItem lesson={lesson} key={lesson.id} />
-          ))}
+          {searchValue.length === 0
+            ? lessons?.map(lesson => (
+                <LessonsItem lesson={lesson} key={lesson.id} />
+              ))
+            : searchLessons?.map(lesson => (
+                <LessonsItem lesson={lesson} key={lesson.id} />
+              ))}
         </List>
       )}
     </div>

@@ -1,16 +1,17 @@
-import { useRef } from 'react'
+import { useEffect, useState } from 'react';
 
-type argFunction = (...args: any[]) => void
+export function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
-export const useDebounce = <T extends argFunction>(func: T, ms: number) => {
-  let timer = useRef<NodeJS.Timeout>()
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
 
-  return function (...args: any[]) {
-    clearInterval(timer.current)
-    const functionCall = () => {
-      func.apply(func, args)
-    }
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
 
-    timer.current = setTimeout(functionCall, ms)
-  }
+  return debouncedValue;
 }

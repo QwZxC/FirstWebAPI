@@ -1,23 +1,17 @@
-import { useEffect } from 'react'
-import { fetchAllLessons } from '../actions/fetchAllLessons'
 import { FormAddLesson } from '../components/FormAddLesson/FormAddLesson'
 import { LessonsList } from '../components/LessonsList/LessonsList'
-import { useAppDispatch } from '../hooks/redux'
 import { FindLesson } from '../components/FindLesson/FindLesson'
 import { Container } from '@mui/system'
+import { useState } from 'react'
 
 export const LessonsPage = () => {
-  const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    dispatch(fetchAllLessons())
-  }, [dispatch])
-
+  const [search, setSearch] = useState('');
+  
   return (
     <div>
       <Container>
-        <FindLesson />
-        <LessonsList />
+        <FindLesson search={search} setSearch={setSearch} />
+        <LessonsList search={search} />
         <FormAddLesson />
       </Container>
     </div>
