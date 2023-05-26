@@ -43,7 +43,7 @@ namespace WebJournal.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<IEnumerable<LessonDTO>> GetLessonsByName(string name)
         {
-            IEnumerable<LessonDTO> lessons = _context.Lessons.ToList().FindAll(lesson => lesson.Name == name).Select(lesson => new LessonDTO()
+            IEnumerable<LessonDTO> lessons = _context.Lessons.ToList().FindAll(lesson => lesson.Name.Contains(name)).Select(lesson => new LessonDTO()
             {
                 Id = lesson.Id,
                 Name = lesson.Name,
