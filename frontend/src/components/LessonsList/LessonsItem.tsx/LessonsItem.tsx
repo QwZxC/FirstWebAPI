@@ -5,8 +5,8 @@ import { useQueryClient, useMutation } from 'react-query'
 import { deleteLesson, updateLesson } from './../../../services/lessons'
 import CreateIcon from '@mui/icons-material/Create'
 import DeleteIcon from '@mui/icons-material/Delete'
-import UpgradeIcon from '@mui/icons-material/Upgrade'
 import CloseIcon from '@mui/icons-material/Close'
+import DoneIcon from '@mui/icons-material/Done';
 
 interface LessonsItemProps {
   lesson: ILesson
@@ -83,7 +83,7 @@ export const LessonsItem: FC<LessonsItemProps> = ({ lesson }) => {
         {update ? (
           <>
             <IconButton onClick={upgradeClick}>
-              <UpgradeIcon />
+              <DoneIcon />
             </IconButton>
 
             <IconButton onClick={closeUpdateClick}>
