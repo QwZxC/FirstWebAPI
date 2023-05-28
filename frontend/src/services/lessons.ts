@@ -61,7 +61,7 @@ export const deleteLesson = async (id: number): Promise<void> => {
 
 export const updateLesson = async (lesson: ILesson): Promise<ILesson> => {
   try {
-    const response = await fetch([BASE, `${lesson.id}/Update`].join('/'), {
+    const response = await fetch([BASE, `Update`].join('/'), {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
