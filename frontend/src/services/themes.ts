@@ -2,7 +2,7 @@ import { ITheme } from '../models/ITheme'
 
 const BASE = 'https://localhost:5000/api/Theme'
 
-export const getLessonsAndFindByString = async (
+export const getThemesAndFindByString = async (
   string: string,
 ): Promise<ITheme[] | undefined> => {
   let secondPartUrl = string === 'All' ? 'All' : `name:string?name=${string}`
@@ -26,7 +26,7 @@ export const getLessonsAndFindByString = async (
 	}
 }
 
-export const createLesson = async (theme: ITheme): Promise<ITheme> => {
+export const createTheme = async (theme: ITheme): Promise<ITheme> => {
 	try {
     const response = await fetch([BASE, "Create"].join('/'), {
       method: 'POST',
@@ -48,7 +48,7 @@ export const createLesson = async (theme: ITheme): Promise<ITheme> => {
   }
 }
 
-export const deleteLesson = async (id: number): Promise<void> => {
+export const deleteTheme = async (id: number): Promise<void> => {
   try {
     const response = await fetch([BASE, id].join('/'), { method: 'DELETE' });
     if (!response.ok) {

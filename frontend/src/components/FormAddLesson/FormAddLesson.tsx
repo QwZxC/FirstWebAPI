@@ -37,9 +37,11 @@ export const FormAddLesson = () => {
         type='text'
         label='Введите название занятия...'
       />
+      
       <Button variant='outlined' onClick={submitClickHandler}>
         Добавить
       </Button>
+      
     </FormGroup>
   )
 }
