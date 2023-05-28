@@ -1,10 +1,15 @@
 import { LessonsPage } from './pages/LessonsPage';
+import { QueryClientProvider, QueryClient } from 'react-query'
 
 const App = () => {
+  const client = new QueryClient()
+  
   return (
-    <div>
-      <LessonsPage />
-    </div>
+    <QueryClientProvider client={client}>
+      <div>
+        <LessonsPage />
+      </div>
+    </QueryClientProvider>
   )
 }
 

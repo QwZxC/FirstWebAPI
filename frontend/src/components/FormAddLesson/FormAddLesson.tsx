@@ -1,15 +1,30 @@
 import { useState } from 'react'
 import { Button, FormGroup, TextField } from '@mui/material'
-import { useAddLessonMutation } from '../../store/services/lessonsApi'
+import { useMutation, useQueryClient } from 'react-query'
+import { createLesson } from '../../services/lessons'
 
 export const FormAddLesson = () => {
-
   const [name, setName] = useState<string>('')
-  const [addLesson] = useAddLessonMutation()
+
+  const client = useQueryClient()
+
+  const { mutate: create } = useMutation({
+    mutationFn: createLesson,
+    onSuccess: () => {
+      client.invalidateQueries({
+        queryKey: ['lessons', 'all', 'search']
+      })
+    }
+  })
 
   const submitClickHandler = async () => {
     if (name.length === 0) return
-    await addLesson({ name, themes: [], courseId: 0 })
+    const newLesson = {
+      courseId: 0,
+      name,
+      themes: [],
+    }
+    create(newLesson)
     setName('')
   }
 

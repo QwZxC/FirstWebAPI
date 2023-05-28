@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import { ILesson } from '../../../models/ILesson'
 import { Button, ListItem, Typography } from '@mui/material';
-import { useDeleteLessonMutation } from '../../../store/services/lessonsApi';
+import { useQueryClient, useMutation } from 'react-query';
+import { deleteLesson } from './../../../services/lessons';
 
 interface LessonsItemProps {
   lesson: ILesson
@@ -10,11 +11,20 @@ interface LessonsItemProps {
 export const LessonsItem: FC<LessonsItemProps> = ({ lesson }) => {
   const { id, name, courseId } = lesson
 
-  const [deleteLesson] = useDeleteLessonMutation()
+  const client = useQueryClient();
+  
+  const {mutate: deleteLessonById} = useMutation({
+    mutationFn: deleteLesson,
+    onSuccess: () => {
+      client.invalidateQueries({
+        queryKey: ['lessons', 'all', 'search']
+      })
+    }
+  })
 
   const buttonClickHandler = async () => {
     if (id === undefined) return
-    await deleteLesson(id)
+    deleteLessonById(id)
   }
 
   return (
