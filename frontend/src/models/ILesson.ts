@@ -1,8 +1,8 @@
 import { ITheme } from "./ITheme";
 
 export interface ILesson {
-    id: number,
+    id?: number,
     name: string,
     courseId: number,
-    themes: ITheme[]
+    themes: ITheme[] 
 }
