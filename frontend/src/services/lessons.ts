@@ -58,3 +58,25 @@ export const deleteLesson = async (id: number): Promise<void> => {
     console.error(error);
   }
 };
+
+export const updateLesson = async (lesson: ILesson): Promise<ILesson> => {
+  try {
+    const response = await fetch([BASE, `${lesson.id}/Update`].join('/'), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(lesson)
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    const result = await response.json() as ILesson;
+    return result;
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
