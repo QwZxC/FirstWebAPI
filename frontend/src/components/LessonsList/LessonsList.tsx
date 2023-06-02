@@ -1,7 +1,7 @@
 import { List, Typography } from '@mui/material'
 import { Loader } from '../Loader/Loader'
 import { LessonsItem } from './LessonsItem.tsx/LessonsItem'
-import { FC } from 'react'
+import { FC, memo } from 'react'
 
 import { ILesson } from '../../models/ILesson'
 
@@ -14,7 +14,7 @@ interface LessonsListProps {
   lessons?: ILesson[]
 }
 
-export const LessonsList: FC<LessonsListProps> = ({
+const LessonsList: FC<LessonsListProps> = ({
   search,
   isLoading,
   isSuccess,
@@ -40,3 +40,5 @@ export const LessonsList: FC<LessonsListProps> = ({
     </div>
   )
 }
+
+export default memo(LessonsList)

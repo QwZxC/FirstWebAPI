@@ -1,15 +1,16 @@
 import { FC } from "react"
 import { ITheme } from "../../../models/ITheme"
-import { ListItem } from '@mui/material';
+import { ListItem, Typography } from '@mui/material';
 
 interface ThemesItemProps {
 	theme: ITheme
 }
 
 export const ThemesItem: FC<ThemesItemProps> = ({ theme }) => {
+	const { name } = theme
   return (
     <ListItem>
-			{theme.name}
+			<Typography variant="h4" component="p">{name}</Typography>
 		</ListItem>
   )
 }

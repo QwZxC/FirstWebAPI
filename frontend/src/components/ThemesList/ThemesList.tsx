@@ -1,5 +1,5 @@
-import { List } from '@mui/material'
-import { FC } from 'react'
+import { List, Typography } from '@mui/material'
+import { FC, memo } from 'react'
 import { ITheme } from '../../models/ITheme'
 import { ThemesItem } from './ThemesItem/ThemesItem'
 
@@ -7,12 +7,19 @@ interface ThemesListProps {
   themes?: ITheme[]
 }
 
-export const ThemesList: FC<ThemesListProps> = ({ themes }) => {
+const ThemesList: FC<ThemesListProps> = ({ themes }) => {
   return (
     <List>
+      {themes?.length === 0 && (
+        <Typography variant='h5' component='p'>
+          Тем не найдено
+        </Typography>
+      )}
       {themes?.map(theme => (
         <ThemesItem theme={theme} key={theme.id} />
       ))}
     </List>
   )
 }
+
+export default memo(ThemesList)

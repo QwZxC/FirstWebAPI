@@ -1,4 +1,4 @@
-import { ChangeEvent, FC } from 'react'
+import { ChangeEvent, FC, memo } from 'react'
 import { TextField } from '@mui/material'
 
 interface FindLessonProps {
@@ -6,7 +6,7 @@ interface FindLessonProps {
   setSearch: (search: string) => void
 }
 
-export const FindLesson: FC<FindLessonProps> = ({ search, setSearch }) => {
+const FindLesson: FC<FindLessonProps> = ({ search, setSearch }) => {
   const searchCnangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setSearch(value)
@@ -22,3 +22,5 @@ export const FindLesson: FC<FindLessonProps> = ({ search, setSearch }) => {
     />
   )
 }
+
+export default memo(FindLesson)

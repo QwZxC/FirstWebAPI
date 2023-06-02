@@ -1,11 +1,10 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { Button, FormGroup, TextField } from '@mui/material'
 import { useMutation, useQueryClient } from 'react-query'
 import { createLesson } from '../../services/lessons'
 
-export const FormAddLesson = () => {
+const FormAddLesson = () => {
   const [name, setName] = useState<string>('')
-
   const client = useQueryClient()
 
   const { mutate: create } = useMutation({
@@ -45,3 +44,5 @@ export const FormAddLesson = () => {
     </FormGroup>
   )
 }
+
+export default memo(FormAddLesson)
