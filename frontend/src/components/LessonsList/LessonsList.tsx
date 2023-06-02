@@ -1,31 +1,27 @@
 import { List, Typography } from '@mui/material'
 import { Loader } from '../Loader/Loader'
 import { LessonsItem } from './LessonsItem.tsx/LessonsItem'
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
 
-import { useQuery } from 'react-query'
-import { getLessonsAndFindByString } from './../../services/lessons'
+import { ILesson } from '../../models/ILesson'
 
 interface LessonsListProps {
   search: string
+  isLoading: boolean
+  isSuccess: boolean
+  isError: boolean
+  currentLessonId: number | undefined
+  lessons?: ILesson[]
 }
 
-export const LessonsList: FC<LessonsListProps> = ({ search }) => {
-  const { isLoading, isError, data: lessons, refetch, isSuccess } = useQuery({
-    queryFn: () => getLessonsAndFindByString(search === '' ? 'All' : search),
-    queryKey: ['lessons', 'all', 'search'],
-    onError: (error) => console.error(error)
-  })
-
-  //debounce search with delay 300 ms
-  useEffect(() => {
-    let timer = setTimeout(() => {
-      refetch()
-    }, 300)
-
-    return () => clearTimeout(timer)
-  }, [search, refetch])
-
+export const LessonsList: FC<LessonsListProps> = ({
+  search,
+  isLoading,
+  isSuccess,
+  lessons,
+  isError,
+  currentLessonId
+}) => {
   const lessonsIsEmpty = isSuccess && lessons?.length === 0
 
   return (
@@ -37,7 +33,7 @@ export const LessonsList: FC<LessonsListProps> = ({ search }) => {
       {!lessonsIsEmpty && (
         <List>
           {lessons?.map(lesson => (
-            <LessonsItem lesson={lesson} key={lesson.id} />
+            <LessonsItem lesson={lesson} key={lesson.id} currentLessonId={currentLessonId} />
           ))}
         </List>
       )}

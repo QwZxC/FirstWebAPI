@@ -1,18 +1,23 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { ILesson } from '../../../models/ILesson'
-import { IconButton, ListItem, TextField, Typography } from '@mui/material'
+import { IconButton, ListItem, SxProps, TextField, Theme, Typography } from '@mui/material'
 import { useQueryClient, useMutation } from 'react-query'
 import { deleteLesson, updateLesson } from './../../../services/lessons'
 import CreateIcon from '@mui/icons-material/Create'
 import DeleteIcon from '@mui/icons-material/Delete'
 import CloseIcon from '@mui/icons-material/Close'
-import DoneIcon from '@mui/icons-material/Done';
+import DoneIcon from '@mui/icons-material/Done'
+import { useNavigate } from 'react-router-dom'
 
 interface LessonsItemProps {
   lesson: ILesson
+  currentLessonId: number | undefined
 }
 
-export const LessonsItem: FC<LessonsItemProps> = ({ lesson }) => {
+export const LessonsItem: FC<LessonsItemProps> = ({
+  lesson,
+  currentLessonId,
+}) => {
   const { id, name } = lesson
 
   const [update, setUpdate] = useState(false)
@@ -22,13 +27,15 @@ export const LessonsItem: FC<LessonsItemProps> = ({ lesson }) => {
 
   const client = useQueryClient()
 
-  const { mutate: lessonUpdate} = useMutation({
+  const navigate = useNavigate();
+
+  const { mutate: lessonUpdate } = useMutation({
     mutationFn: updateLesson,
     onSuccess: () => {
       client.invalidateQueries({
-        queryKey: ['lessons', 'all', 'search']
+        queryKey: ['lessons', 'all', 'search'],
       })
-    }
+    },
   })
   const { mutate: deleteLessonById } = useMutation({
     mutationFn: deleteLesson,
@@ -49,7 +56,7 @@ export const LessonsItem: FC<LessonsItemProps> = ({ lesson }) => {
 
   const buttonOpenUpdateClick = () => {
     setUpdate(true)
-    setUpdateValue(name) 
+    setUpdateValue(name)
   }
 
   const buttonDeleteClick = () => {
@@ -60,12 +67,27 @@ export const LessonsItem: FC<LessonsItemProps> = ({ lesson }) => {
   const upgradeClick = () => {
     const newLesson = lesson
     newLesson.name = updateValue
-    lessonUpdate(newLesson) 
+    lessonUpdate(newLesson)
     setUpdate(false)
   }
 
+  const navigateByLessonId = () => {
+    navigate(`/lessons/${lesson?.id}`, { replace: true });
+  }
+
+  const styles: SxProps<Theme> = {
+    cursor: "pointer"
+  }
+
   return (
-    <ListItem>
+    <ListItem
+      onClick={navigateByLessonId}
+      sx={
+        currentLessonId === lesson.id
+          ? { backgroundColor: 'rgba(0, 0, 0, 0.1)', ...styles }
+          : styles
+      }
+    >
       {update ? (
         <TextField
           inputRef={updateInputRef}
