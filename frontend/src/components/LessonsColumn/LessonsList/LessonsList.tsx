@@ -1,9 +1,9 @@
 import { List, Typography } from '@mui/material'
-import { Loader } from '../Loader/Loader'
+import { Loader } from '../../Loader/Loader'
 import { LessonsItem } from './LessonsItem.tsx/LessonsItem'
 import { FC, memo } from 'react'
 
-import { ILesson } from '../../models/ILesson'
+import { ILesson } from '../../../models/ILesson'
 
 interface LessonsListProps {
   search: string

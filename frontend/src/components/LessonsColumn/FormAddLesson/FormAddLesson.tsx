@@ -1,7 +1,7 @@
 import { memo, useState } from 'react'
 import { Button, FormGroup, TextField } from '@mui/material'
 import { useMutation, useQueryClient } from 'react-query'
-import { createLesson } from '../../services/lessons'
+import { createLesson } from '../../../services/lessons'
 
 const FormAddLesson = () => {
   const [name, setName] = useState<string>('')
