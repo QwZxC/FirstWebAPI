@@ -11,7 +11,7 @@ namespace WebJournal
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options => options.ReturnHttpNotAcceptable = true).AddXmlDataContractSerializerFormatters();
 
             //Register
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
