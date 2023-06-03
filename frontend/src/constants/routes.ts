@@ -1,6 +1,7 @@
 const urls = {
   lessonUrl: '/lessons/',
   lessonUrlById: '/lessons/:id',
+	startPage: '/'
 }
 
-export const { lessonUrl, lessonUrlById } = urls
+export const { lessonUrl, lessonUrlById, startPage } = urls
