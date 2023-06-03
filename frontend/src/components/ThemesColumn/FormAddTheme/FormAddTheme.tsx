@@ -48,7 +48,7 @@ const FormAddTheme: FC<FormAddThemeProps> = ({ lessonId }) => {
           label='Введите название темы...'
         />
 
-        <Button variant='outlined' >
+        <Button variant='outlined'  type='submit'>
           Добавить
         </Button>
       </Box>

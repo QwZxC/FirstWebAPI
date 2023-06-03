@@ -1,5 +1,5 @@
 import { FormEventHandler, memo, useState } from 'react'
-import { Button, FormGroup, TextField } from '@mui/material'
+import { Box, Button, TextField } from '@mui/material'
 import { useMutation, useQueryClient } from 'react-query'
 import { createLesson } from '../../../services/lessons'
 
@@ -30,7 +30,12 @@ const FormAddLesson = () => {
 
   return (
     <form onSubmit={submitClickHandler}>
-      <FormGroup sx={{ gap: '10px' }}>
+      <Box 
+        display='flex' 
+        flexDirection='column' 
+        gap='10px'
+        
+      >
         <TextField
           sx={{ width: '100%' }}
           onChange={e => setName(e.target.value)}
@@ -42,7 +47,7 @@ const FormAddLesson = () => {
         <Button variant='outlined' type='submit'>
           Добавить
         </Button>
-      </FormGroup>
+      </Box>
     </form>
   )
 }
