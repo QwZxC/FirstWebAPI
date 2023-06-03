@@ -1,6 +1,13 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { ILesson } from '../../../models/ILesson'
-import { IconButton, ListItem, SxProps, TextField, Theme, Typography } from '@mui/material'
+import {
+  IconButton,
+  ListItem,
+  SxProps,
+  TextField,
+  Theme,
+  Typography,
+} from '@mui/material'
 import { useQueryClient, useMutation } from 'react-query'
 import { deleteLesson, updateLesson } from './../../../services/lessons'
 import CreateIcon from '@mui/icons-material/Create'
@@ -8,6 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import CloseIcon from '@mui/icons-material/Close'
 import DoneIcon from '@mui/icons-material/Done'
 import { useNavigate } from 'react-router-dom'
+import { lessonUrl } from '../../../constants/routes'
 
 interface LessonsItemProps {
   lesson: ILesson
@@ -27,7 +35,7 @@ export const LessonsItem: FC<LessonsItemProps> = ({
 
   const client = useQueryClient()
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const { mutate: lessonUpdate } = useMutation({
     mutationFn: updateLesson,
@@ -72,11 +80,11 @@ export const LessonsItem: FC<LessonsItemProps> = ({
   }
 
   const navigateByLessonId = () => {
-    navigate(`/lessons/${lesson?.id}`, { replace: true });
+    navigate(lessonUrl + lesson?.id, { replace: true })
   }
 
   const styles: SxProps<Theme> = {
-    cursor: "pointer"
+    cursor: 'pointer',
   }
 
   return (

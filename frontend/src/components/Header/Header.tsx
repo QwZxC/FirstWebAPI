@@ -1,14 +1,21 @@
-import { AppBar, Toolbar, Typography } from '@mui/material'
+import { AppBar, Button, Toolbar } from '@mui/material'
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { lessonUrl } from '../../constants/routes'
 
 export const Header = () => {
+  const navigate = useNavigate()
   return (
     <AppBar position='static'>
       <Toolbar>
-        <NavLink to='/lessons'>
-          <Typography variant='h5' color="White">Занятия</Typography>
-        </NavLink>
+        <Button
+          sx={{color: "white"}}
+          onClick={() => {
+            navigate(lessonUrl, { replace: true })
+          }}
+        >
+          Занятия
+        </Button>
       </Toolbar>
     </AppBar>
   )

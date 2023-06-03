@@ -30,7 +30,7 @@ export const ThemesItem: FC<ThemesItemProps> = ({ theme }) => {
 
   return (
     <ListItem>
-      <Typography variant='h4' component='p' sx={{flexGrow: 1}}>
+      <Typography variant='h5' component='p' sx={{flexGrow: 1}}>
         {name}
       </Typography>
 

@@ -12,7 +12,7 @@ const ThemesList: FC<ThemesListProps> = ({ themes }) => {
   return (
     <List>
       {(themes?.length === 0 || !themes) && (
-        <Typography variant='h4' component='p'>
+        <Typography variant='h5' component='p'>
           Тем не найдено
         </Typography>
       )}

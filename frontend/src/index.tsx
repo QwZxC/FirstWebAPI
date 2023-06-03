@@ -11,7 +11,7 @@ const client = new QueryClient()
 root.render(
   <BrowserRouter>
     <QueryClientProvider client={client}>
-      <App />,
+      <App />
     </QueryClientProvider>
-  </BrowserRouter>,
+  </BrowserRouter>
 )
