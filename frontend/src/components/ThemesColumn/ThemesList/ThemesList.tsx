@@ -8,7 +8,6 @@ interface ThemesListProps {
 }
 
 const ThemesList: FC<ThemesListProps> = ({ themes }) => {
-	console.log(themes)
   return (
     <List>
       {(themes?.length === 0 || !themes) && (

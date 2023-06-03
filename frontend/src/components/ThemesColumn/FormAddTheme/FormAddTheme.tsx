@@ -1,11 +1,11 @@
-import { FC, memo, useState } from 'react'
-import { Button, FormGroup, TextField } from '@mui/material'
+import { FC, FormEventHandler, memo, useState } from 'react'
+import { Box, Button, TextField } from '@mui/material'
 import { useMutation, useQueryClient } from 'react-query'
 import { createTheme } from '../../../services/themes'
 import { ITheme } from '../../../models/ITheme'
 
 interface FormAddThemeProps {
-	lessonId: number | undefined
+  lessonId: number | undefined
 }
 
 const FormAddTheme: FC<FormAddThemeProps> = ({ lessonId }) => {
@@ -16,36 +16,43 @@ const FormAddTheme: FC<FormAddThemeProps> = ({ lessonId }) => {
     mutationFn: createTheme,
     onSuccess: () => {
       client.invalidateQueries({
-        queryKey: ['lessons']
+        queryKey: ['lessons'],
       })
-    }
+    },
   })
 
-  const submitClickHandler = async () => {
+  const submitClickHandler: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault()
     if (name.length === 0 || lessonId === undefined) return
     const newLesson: ITheme = {
       name,
-			lessonId
+      lessonId,
     }
     create(newLesson)
     setName('')
   }
 
   return (
-    <FormGroup>
-      <TextField
-        sx={{ width: '100%' }}
-        onChange={e => setName(e.target.value)}
-        value={name}
-        type='text'
-        label='Введите название темы...'
-      />
-      
-      <Button variant='outlined' onClick={submitClickHandler}>
-        Добавить
-      </Button>
-      
-    </FormGroup>
+    <form onSubmit={submitClickHandler}>
+      <Box 
+        display='flex' 
+        flexDirection='column' 
+        gap='10px'
+        
+      >
+        <TextField
+          sx={{ width: '100%' }}
+          onChange={e => setName(e.target.value)}
+          value={name}
+          type='text'
+          label='Введите название темы...'
+        />
+
+        <Button variant='outlined' >
+          Добавить
+        </Button>
+      </Box>
+    </form>
   )
 }
 

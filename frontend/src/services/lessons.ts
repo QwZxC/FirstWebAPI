@@ -18,7 +18,6 @@ export const getLessonsAndFindByString = async (
       throw new Error('Network response was not ok')
     }
     const data = (await response.json()) as ILesson[]
-    console.log(data)
     return data
   } catch (e){
 		const error = e as Error

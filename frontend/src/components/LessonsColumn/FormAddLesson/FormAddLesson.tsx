@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { FormEventHandler, memo, useState } from 'react'
 import { Button, FormGroup, TextField } from '@mui/material'
 import { useMutation, useQueryClient } from 'react-query'
 import { createLesson } from '../../../services/lessons'
@@ -11,15 +11,16 @@ const FormAddLesson = () => {
     mutationFn: createLesson,
     onSuccess: () => {
       client.invalidateQueries({
-        queryKey: ['lessons', 'all', 'search']
+        queryKey: ['lessons', 'all', 'search'],
       })
-    }
+    },
   })
 
-  const submitClickHandler = async () => {
+  const submitClickHandler: FormEventHandler<HTMLFormElement> = async e => {
+    e.preventDefault()
     if (name.length === 0) return
     const newLesson = {
-      courseId: 0,
+      courseId: 100,
       name,
       themes: [],
     }
@@ -28,21 +29,21 @@ const FormAddLesson = () => {
   }
 
   return (
-    <FormGroup sx={{gap: "10px"}}>
-      <TextField
-        sx={{ width: '100%' }}
-        onChange={e => setName(e.target.value)}
-        value={name}
-        type='text'
-        label='Введите название занятия...'
-      />
-      
-      <Button variant='outlined' onClick={submitClickHandler}>
-        Добавить
-      </Button>
-      
-    </FormGroup>
+    <form onSubmit={submitClickHandler}>
+      <FormGroup sx={{ gap: '10px' }}>
+        <TextField
+          sx={{ width: '100%' }}
+          onChange={e => setName(e.target.value)}
+          value={name}
+          type='text'
+          label='Введите название занятия...'
+        />
+
+        <Button variant='outlined' type='submit'>
+          Добавить
+        </Button>
+      </FormGroup>
+    </form>
   )
 }
-
 export default memo(FormAddLesson)
