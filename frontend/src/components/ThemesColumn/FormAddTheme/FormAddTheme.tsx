@@ -21,7 +21,7 @@ const FormAddTheme: FC<FormAddThemeProps> = ({ lessonId }) => {
     },
   })
 
-  const submitClickHandler: FormEventHandler<HTMLFormElement> = async (e) => {
+  const submitClickHandler: FormEventHandler<HTMLFormElement> = async e => {
     e.preventDefault()
     if (name.length === 0 || lessonId === undefined) return
     const newLesson: ITheme = {
@@ -34,12 +34,7 @@ const FormAddTheme: FC<FormAddThemeProps> = ({ lessonId }) => {
 
   return (
     <form onSubmit={submitClickHandler}>
-      <Box 
-        display='flex' 
-        flexDirection='column' 
-        gap='10px'
-        
-      >
+      <Box display='flex' flexDirection='column' gap='10px'>
         <TextField
           sx={{ width: '100%' }}
           onChange={e => setName(e.target.value)}
@@ -48,7 +43,7 @@ const FormAddTheme: FC<FormAddThemeProps> = ({ lessonId }) => {
           label='Введите название темы...'
         />
 
-        <Button variant='outlined'  type='submit'>
+        <Button variant='outlined' type='submit'>
           Добавить
         </Button>
       </Box>

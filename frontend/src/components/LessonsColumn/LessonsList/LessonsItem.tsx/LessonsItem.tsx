@@ -1,21 +1,13 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useState } from 'react'
 import { ILesson } from '../../../../models/ILesson'
-import {
-  IconButton,
-  ListItem,
-  SxProps,
-  TextField,
-  Theme,
-  Typography,
-} from '@mui/material'
+import { IconButton, ListItem, SxProps, Theme, Typography } from '@mui/material'
 import { useQueryClient, useMutation } from 'react-query'
 import { deleteLesson, updateLesson } from '../../../../services/lessons'
 import CreateIcon from '@mui/icons-material/Create'
 import DeleteIcon from '@mui/icons-material/Delete'
-import CloseIcon from '@mui/icons-material/Close'
-import DoneIcon from '@mui/icons-material/Done'
 import { useNavigate } from 'react-router-dom'
 import { lessonUrl } from '../../../../constants/routes'
+import { LessonUpdateForm } from './LessonUpdateForm/LessonUpdateForm'
 
 interface LessonsItemProps {
   lesson: ILesson
@@ -28,13 +20,9 @@ export const LessonsItem: FC<LessonsItemProps> = ({
 }) => {
   const { id, name } = lesson
 
-  const [update, setUpdate] = useState(false)
-  const [updateValue, setUpdateValue] = useState(name)
-
-  const updateInputRef = useRef<HTMLInputElement>(null)
+  const [isEditing, setIsEditing] = useState(false)
 
   const client = useQueryClient()
-
   const navigate = useNavigate()
 
   const { mutate: lessonUpdate } = useMutation({
@@ -45,6 +33,7 @@ export const LessonsItem: FC<LessonsItemProps> = ({
       })
     },
   })
+
   const { mutate: deleteLessonById } = useMutation({
     mutationFn: deleteLesson,
     onSuccess: () => {
@@ -54,32 +43,27 @@ export const LessonsItem: FC<LessonsItemProps> = ({
     },
   })
 
-  const closeUpdateClick = () => {
-    setUpdate(false)
+  const handleEditClick = () => {
+    setIsEditing(true)
   }
 
-  useEffect(() => {
-    if (update && updateInputRef.current) updateInputRef.current.select()
-  }, [update])
-
-  const buttonOpenUpdateClick = () => {
-    setUpdate(true)
-    setUpdateValue(name)
-  }
-
-  const buttonDeleteClick = () => {
+  const handleDeleteClick = () => {
     if (id === undefined) return
     deleteLessonById(id)
   }
 
-  const upgradeClick = () => {
+  const handleFormSubmit = (value: string) => {
     const newLesson = lesson
-    newLesson.name = updateValue
+    newLesson.name = value
     lessonUpdate(newLesson)
-    setUpdate(false)
+    setIsEditing(false)
   }
 
-  const navigateByLessonId = () => {
+  const handleFormCancel = () => {
+    setIsEditing(false)
+  }
+
+  const handleClick = () => {
     navigate(lessonUrl + lesson?.id, { replace: true })
   }
 
@@ -87,51 +71,34 @@ export const LessonsItem: FC<LessonsItemProps> = ({
     cursor: 'pointer',
   }
 
+  const lessonItemStyles: SxProps<Theme> =
+    currentLessonId === lesson.id
+      ? { backgroundColor: 'rgba(0, 0, 0, 0.1)', ...styles }
+      : styles
+
   return (
-    <ListItem
-      onClick={navigateByLessonId}
-      sx={
-        currentLessonId === lesson.id
-          ? { backgroundColor: 'rgba(0, 0, 0, 0.1)', ...styles }
-          : styles
-      }
-    >
-      {update ? (
-        <TextField
-          inputRef={updateInputRef}
-          label='Изменить название'
-          variant='filled'
-          sx={{ flexGrow: 1 }}
-          value={updateValue}
-          onChange={e => setUpdateValue(e.target.value)}
+    <ListItem onClick={handleClick} sx={lessonItemStyles}>
+      {isEditing && (
+        <LessonUpdateForm
+          initialValue={name}
+          onSubmit={handleFormSubmit}
+          onCancel={handleFormCancel}
         />
-      ) : (
-        <Typography sx={{ flexGrow: 1 }}>{name}</Typography>
       )}
 
-      <div>
-        {update ? (
-          <>
-            <IconButton onClick={upgradeClick}>
-              <DoneIcon />
-            </IconButton>
+      {!isEditing && (
+        <>
+          <Typography sx={{ flexGrow: 1 }}>{name}</Typography>
 
-            <IconButton onClick={closeUpdateClick}>
-              <CloseIcon />
-            </IconButton>
-          </>
-        ) : (
-          <>
-            <IconButton onClick={buttonDeleteClick}>
-              <DeleteIcon />
-            </IconButton>
+          <IconButton onClick={handleDeleteClick}>
+            <DeleteIcon />
+          </IconButton>
 
-            <IconButton onClick={buttonOpenUpdateClick}>
-              <CreateIcon />
-            </IconButton>
-          </>
-        )}
-      </div>
+          <IconButton onClick={handleEditClick}>
+            <CreateIcon />
+          </IconButton>
+        </>
+      )}
     </ListItem>
   )
 }

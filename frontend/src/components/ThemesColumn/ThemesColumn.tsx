@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import ThemesList from './ThemesList/ThemesList'
 import FormAddTheme from './FormAddTheme/FormAddTheme'
 import { ITheme } from '../../models/ITheme'
@@ -13,8 +13,18 @@ const ThemesColumn: FC<ThemesColumnProps> = ({ themes, lessonId }) => {
   return (
     <>
       <Typography variant='h3'>Темы</Typography>
-      <ThemesList themes={themes} />
-      <FormAddTheme lessonId={lessonId} />
+      {lessonId ? (
+        <>
+          <ThemesList themes={themes} />
+          <FormAddTheme lessonId={lessonId} />
+        </>
+      ) : (
+        <Box display="flex" justifyContent="center">
+          <Typography variant='h4' component="p">
+            Выберите занятие
+          </Typography> 
+        </Box>
+      )}
     </>
   )
 }
