@@ -1,5 +1,5 @@
 export interface ITheme {
-    id: number,
+    id?: number,
     name: string,
     lessonId: number,
 }

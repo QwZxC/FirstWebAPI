@@ -8,6 +8,7 @@ import { Grid, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getLessonsAndFindByString } from '../services/lessons'
+import FormAddTheme from '../components/FormAddTheme/FormAddTheme'
 
 export const LessonsPage = () => {
   const [search, setSearch] = useState('')
@@ -66,6 +67,7 @@ export const LessonsPage = () => {
           <Grid item xs={8}>
             <Typography variant='h3'>Темы</Typography>
             <ThemesList themes={currentLesson?.themes} />
+            <FormAddTheme lessonId={currentLessonId} />
           </Grid>
           {/* Right column */}
         </Grid>
