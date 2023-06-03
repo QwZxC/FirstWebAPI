@@ -67,14 +67,17 @@ export const LessonsItem: FC<LessonsItemProps> = ({
     navigate(lessonUrl + lesson?.id, { replace: true })
   }
 
-  const styles: SxProps<Theme> = {
+  const commonStyles: SxProps<Theme> = {
     cursor: 'pointer',
+    "&:hover": {
+      backgroundColor: 'rgba(0, 0, 0, 0.1)'
+    }
   }
 
   const lessonItemStyles: SxProps<Theme> =
     currentLessonId === lesson.id
-      ? { backgroundColor: 'rgba(0, 0, 0, 0.1)', ...styles }
-      : styles
+      ? { backgroundColor: 'rgba(0, 0, 0, 0.1)', ...commonStyles }
+      : commonStyles
 
   return (
     <ListItem onClick={handleClick} sx={lessonItemStyles}>

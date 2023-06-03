@@ -13,16 +13,17 @@ const ThemesColumn: FC<ThemesColumnProps> = ({ themes, lessonId }) => {
   return (
     <>
       <Typography variant='h3'>Темы</Typography>
+
       {lessonId ? (
         <>
           <ThemesList themes={themes} />
           <FormAddTheme lessonId={lessonId} />
         </>
       ) : (
-        <Box display="flex" justifyContent="center">
-          <Typography variant='h4' component="p">
+        <Box display='flex' justifyContent='center'>
+          <Typography variant='h4' component='p'>
             Выберите занятие
-          </Typography> 
+          </Typography>
         </Box>
       )}
     </>
