@@ -28,7 +28,7 @@ const FormAddLesson = () => {
   }
 
   return (
-    <FormGroup>
+    <FormGroup sx={{gap: "10px"}}>
       <TextField
         sx={{ width: '100%' }}
         onChange={e => setName(e.target.value)}

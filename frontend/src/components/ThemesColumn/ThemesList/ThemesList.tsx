@@ -1,6 +1,6 @@
 import { List, Typography } from '@mui/material'
 import { FC, memo } from 'react'
-import { ITheme } from '../../models/ITheme'
+import { ITheme } from '../../../models/ITheme'
 import { ThemesItem } from './ThemesItem/ThemesItem'
 
 interface ThemesListProps {

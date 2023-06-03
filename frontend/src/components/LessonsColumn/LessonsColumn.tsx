@@ -1,5 +1,5 @@
-import { Typography } from '@mui/material'
-import FindLesson from '../FindLesson/FindLesson'
+import { Box, Typography } from '@mui/material'
+import FindLesson from './FindLesson/FindLesson'
 import LessonsList from './LessonsList/LessonsList'
 import FormAddLesson from './FormAddLesson/FormAddLesson'
 import { ILesson } from '../../models/ILesson'
@@ -25,7 +25,11 @@ const LessonsColumn: FC<LessonsColumnProps> = ({
   currentLessonId,
 }) => {
   return (
-    <>
+    <Box 
+      display="flex"
+      flexDirection="column"
+      gap="10px"
+    >
       <Typography variant='h3' component='p'>
         Занятия
       </Typography>
@@ -39,7 +43,7 @@ const LessonsColumn: FC<LessonsColumnProps> = ({
         currentLessonId={currentLessonId}
       />
       <FormAddLesson />
-    </>
+    </Box>
   )
 }
 

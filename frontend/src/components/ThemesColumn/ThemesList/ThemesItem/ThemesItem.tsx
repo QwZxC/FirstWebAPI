@@ -1,9 +1,9 @@
 import { FC } from 'react'
-import { ITheme } from '../../../models/ITheme'
+import { ITheme } from '../../../../models/ITheme'
 import { IconButton, ListItem, Typography } from '@mui/material'
 import { Remove } from '@mui/icons-material'
 import { useMutation, useQueryClient } from 'react-query';
-import { deleteTheme } from './../../../services/themes';
+import { deleteTheme } from '../../../../services/themes';
 
 interface ThemesItemProps {
   theme: ITheme

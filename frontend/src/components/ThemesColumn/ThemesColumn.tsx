@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material'
-import ThemesList from '../ThemesList/ThemesList'
-import FormAddTheme from '../FormAddTheme/FormAddTheme'
+import ThemesList from './ThemesList/ThemesList'
+import FormAddTheme from './FormAddTheme/FormAddTheme'
 import { ITheme } from '../../models/ITheme'
 import { FC } from 'react'
 

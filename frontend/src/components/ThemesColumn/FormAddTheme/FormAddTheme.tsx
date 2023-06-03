@@ -1,8 +1,8 @@
 import { FC, memo, useState } from 'react'
 import { Button, FormGroup, TextField } from '@mui/material'
 import { useMutation, useQueryClient } from 'react-query'
-import { createTheme } from '../../services/themes'
-import { ITheme } from '../../models/ITheme'
+import { createTheme } from '../../../services/themes'
+import { ITheme } from '../../../models/ITheme'
 
 interface FormAddThemeProps {
 	lessonId: number | undefined
