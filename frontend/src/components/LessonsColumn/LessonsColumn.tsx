@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import FindLesson from './FindLesson/FindLesson'
 import LessonsList from './LessonsList/LessonsList'
 import FormAddLesson from './FormAddLesson/FormAddLesson'
@@ -24,16 +24,18 @@ const LessonsColumn: FC<LessonsColumnProps> = ({
   lessons,
   currentLessonId,
 }) => {
+
+
   return (
-    <Box 
-      display="flex"
-      flexDirection="column"
-      gap="10px"
+    <Box
+      display='flex'
+      flexDirection='column'
+      gap='10px'
+      borderRadius='10px'
+      padding='10px'
     >
-      <Typography variant='h3' component='p'>
-        Занятия
-      </Typography>
       <FindLesson search={search} setSearch={setSearch} />
+      
       <LessonsList
         search={search}
         isLoading={isLoading}
@@ -42,9 +44,10 @@ const LessonsColumn: FC<LessonsColumnProps> = ({
         lessons={lessons}
         currentLessonId={currentLessonId}
       />
+
       <FormAddLesson />
     </Box>
   )
 }
 
-export default LessonsColumn;
+export default LessonsColumn

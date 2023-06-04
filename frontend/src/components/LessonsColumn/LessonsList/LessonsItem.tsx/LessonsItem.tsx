@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { useNavigate } from 'react-router-dom'
 import { lessonUrl } from '../../../../constants/routes'
 import { LessonUpdateForm } from './LessonUpdateForm/LessonUpdateForm'
+import { AlertDialog } from '../../../AlertDialog/AlertDialog'
 
 interface LessonsItemProps {
   lesson: ILesson
@@ -21,6 +22,7 @@ export const LessonsItem: FC<LessonsItemProps> = ({
   const { id, name } = lesson
 
   const [isEditing, setIsEditing] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
   const client = useQueryClient()
   const navigate = useNavigate()
@@ -49,9 +51,9 @@ export const LessonsItem: FC<LessonsItemProps> = ({
 
   const handleDeleteClick = () => {
     if (id === undefined) return
-    deleteLessonById(id)
+    setDeleteDialogOpen(true)
   }
-
+  
   const handleFormSubmit = (value: string) => {
     const newLesson = lesson
     newLesson.name = value
@@ -69,9 +71,9 @@ export const LessonsItem: FC<LessonsItemProps> = ({
 
   const commonStyles: SxProps<Theme> = {
     cursor: 'pointer',
-    "&:hover": {
-      backgroundColor: 'rgba(0, 0, 0, 0.1)'
-    }
+    ':hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    },
   }
 
   const lessonItemStyles: SxProps<Theme> =
@@ -79,29 +81,50 @@ export const LessonsItem: FC<LessonsItemProps> = ({
       ? { backgroundColor: 'rgba(0, 0, 0, 0.1)', ...commonStyles }
       : commonStyles
 
+  const handleDeleteAgree = () => {
+    if (!id) return
+    deleteLessonById(id)
+    setDeleteDialogOpen(false)
+  }
+
+  const handleDeleteDisagree = () => {
+    setDeleteDialogOpen(false)
+  }
+
   return (
-    <ListItem onClick={handleClick} sx={lessonItemStyles}>
-      {isEditing && (
-        <LessonUpdateForm
-          initialValue={name}
-          onSubmit={handleFormSubmit}
-          onCancel={handleFormCancel}
-        />
-      )}
+    <>
+      <AlertDialog
+        open={deleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        title="Вы действительно хотите удалить?"
+        description={`Вы удаляете занятие "${name}". Это действие нельзя отменить!`}
+        agreeButtonText="Удалить"
+        disagreeButtonText="Отмена"
+        handleAgree={handleDeleteAgree}
+        handleDisagree={handleDeleteDisagree}
+      />
 
-      {!isEditing && (
-        <>
-          <Typography sx={{ flexGrow: 1 }}>{name}</Typography>
+      <ListItem onClick={handleClick} sx={lessonItemStyles}>
+        {isEditing ? (
+          <LessonUpdateForm
+            initialValue={name}
+            onSubmit={handleFormSubmit}
+            onCancel={handleFormCancel}
+          />
+        ) : (
+          <>
+            <Typography sx={{ flexGrow: 1 }}>{name}</Typography>
 
-          <IconButton onClick={handleDeleteClick}>
-            <DeleteIcon />
-          </IconButton>
+            <IconButton onClick={handleDeleteClick}>
+              <DeleteIcon />
+            </IconButton>
 
-          <IconButton onClick={handleEditClick}>
-            <CreateIcon />
-          </IconButton>
-        </>
-      )}
-    </ListItem>
+            <IconButton onClick={handleEditClick}>
+              <CreateIcon />
+            </IconButton>
+          </>
+        )}
+      </ListItem>
+    </>
   )
 }

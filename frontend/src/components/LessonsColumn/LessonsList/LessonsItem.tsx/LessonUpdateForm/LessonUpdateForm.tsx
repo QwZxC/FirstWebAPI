@@ -1,6 +1,6 @@
-import { Close, Done } from "@mui/icons-material"
-import { Box, IconButton, TextField } from "@mui/material"
-import { FC, useEffect, useRef, useState } from "react"
+import { Close, Done } from '@mui/icons-material'
+import { Box, IconButton, TextField } from '@mui/material'
+import { FC, useEffect, useRef, useState } from 'react'
 
 interface LessonUpdateFormProps {
   initialValue: string
@@ -20,6 +20,20 @@ export const LessonUpdateForm: FC<LessonUpdateFormProps> = ({
     if (updateInputRef.current) updateInputRef.current.select()
   }, [])
 
+  useEffect(() => {
+    const handleEscKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onCancel()
+      }
+    }
+
+    document.addEventListener('keydown', handleEscKeyPress)
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKeyPress)
+    }
+  }, [onCancel])
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     onSubmit(updateValue)
@@ -37,15 +51,13 @@ export const LessonUpdateForm: FC<LessonUpdateFormProps> = ({
           onChange={e => setUpdateValue(e.target.value)}
         />
 
-        <div>
-          <IconButton type='submit'>
-            <Done />
-          </IconButton>
+        <IconButton type='submit'>
+          <Done />
+        </IconButton>
 
-          <IconButton onClick={onCancel} type='reset'>
-            <Close />
-          </IconButton>
-        </div>
+        <IconButton onClick={onCancel} type='reset'>
+          <Close />
+        </IconButton>
       </Box>
     </form>
   )

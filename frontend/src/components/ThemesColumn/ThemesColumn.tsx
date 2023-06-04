@@ -12,8 +12,6 @@ interface ThemesColumnProps {
 const ThemesColumn: FC<ThemesColumnProps> = ({ themes, lessonId }) => {
   return (
     <>
-      <Typography variant='h3'>Темы</Typography>
-
       {lessonId ? (
         <>
           <ThemesList themes={themes} />
