@@ -1,11 +1,11 @@
 import { ChangeEvent, FC, memo } from 'react'
 import { TextField } from '@mui/material'
-import { useLesson } from '../../../context/lessons'
+import { useLessons } from '../../../context/lessons'
 
 
 
 const FindLesson: FC = () => {
-  const { search, setSearch } = useLesson()
+  const { search, setSearch } = useLessons()
   
   const searchCnangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value

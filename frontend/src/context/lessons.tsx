@@ -1,4 +1,11 @@
-import { createContext, useContext, FC, ReactNode, useEffect, useState } from 'react'
+import {
+  createContext,
+  useContext,
+  FC,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { ILesson } from '../models/ILesson'
@@ -20,10 +27,10 @@ export const LessonContext = createContext<ContextProps>({
   isError: false,
   isLoading: false,
   isSuccess: false,
-  currentLesson: undefined
+  currentLesson: undefined,
 })
 
-export const useLesson = () => {
+export const useLessons = () => {
   return useContext(LessonContext)
 }
 

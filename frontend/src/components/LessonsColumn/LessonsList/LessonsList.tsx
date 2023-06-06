@@ -1,12 +1,12 @@
 import { Box, List, Skeleton, Typography } from '@mui/material';
 import { FC, memo } from 'react';
-import { useLesson } from '../../../context/lessons';
+import { useLessons } from '../../../context/lessons';
 
 import { LessonsItem } from './LessonsItem.tsx/LessonsItem';
 
 
 const LessonsList: FC = () => {
-  const { isError, isLoading, isSuccess, lessons } = useLesson();
+  const { isError, isLoading, isSuccess, lessons } = useLessons();
   const lessonsIsEmpty = isSuccess && lessons && !lessons.length; 
 
   return (

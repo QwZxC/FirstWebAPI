@@ -2,11 +2,11 @@ import { Box, Typography } from '@mui/material'
 import ThemesList from './ThemesList/ThemesList'
 import FormAddTheme from './FormAddTheme/FormAddTheme'
 import { FC } from 'react'
-import { useLesson } from '../../context/lessons'
+import { useLessons } from '../../context/lessons'
 
 
 const ThemesColumn: FC = () => {
-  const { currentLesson } = useLesson()
+  const { currentLesson } = useLessons()
   const lessonId = currentLesson ? currentLesson.id : undefined
   const themes = currentLesson?.themes
   return (
