@@ -1,12 +1,12 @@
 import { ChangeEvent, FC, memo } from 'react'
 import { TextField } from '@mui/material'
+import { useLesson } from '../../../context/lessons'
 
-interface FindLessonProps {
-  search: string
-  setSearch: (search: string) => void
-}
 
-const FindLesson: FC<FindLessonProps> = ({ search, setSearch }) => {
+
+const FindLesson: FC = () => {
+  const { search, setSearch } = useLesson()
+  
   const searchCnangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setSearch(value)

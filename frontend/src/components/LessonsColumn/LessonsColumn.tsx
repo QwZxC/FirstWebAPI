@@ -2,29 +2,11 @@ import { Box } from '@mui/material'
 import FindLesson from './FindLesson/FindLesson'
 import LessonsList from './LessonsList/LessonsList'
 import FormAddLesson from './FormAddLesson/FormAddLesson'
-import { ILesson } from '../../models/ILesson'
 import { FC } from 'react'
 
-interface LessonsColumnProps {
-  search: string
-  setSearch: (search: string) => void
-  isLoading: boolean
-  isError: boolean
-  isSuccess: boolean
-  lessons?: ILesson[]
-  currentLessonId?: number
-}
 
-const LessonsColumn: FC<LessonsColumnProps> = ({
-  search,
-  setSearch,
-  isLoading,
-  isError,
-  isSuccess,
-  lessons,
-  currentLessonId,
-}) => {
 
+const LessonsColumn: FC = () => {
 
   return (
     <Box
@@ -34,16 +16,9 @@ const LessonsColumn: FC<LessonsColumnProps> = ({
       borderRadius='10px'
       padding='10px'
     >
-      <FindLesson search={search} setSearch={setSearch} />
+      <FindLesson />
       
-      <LessonsList
-        search={search}
-        isLoading={isLoading}
-        isError={isError}
-        isSuccess={isSuccess}
-        lessons={lessons}
-        currentLessonId={currentLessonId}
-      />
+      <LessonsList />
 
       <FormAddLesson />
     </Box>

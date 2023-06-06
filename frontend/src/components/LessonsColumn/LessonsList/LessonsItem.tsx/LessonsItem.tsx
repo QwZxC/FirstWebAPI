@@ -9,18 +9,18 @@ import { useNavigate } from 'react-router-dom'
 import { lessonUrl } from '../../../../constants/routes'
 import { LessonUpdateForm } from './LessonUpdateForm/LessonUpdateForm'
 import { AlertDialog } from '../../../AlertDialog/AlertDialog'
+import { useLesson } from '../../../../context/lessons'
 
 interface LessonsItemProps {
   lesson: ILesson
-  currentLessonId: number | undefined
 }
 
 export const LessonsItem: FC<LessonsItemProps> = ({
   lesson,
-  currentLessonId,
 }) => {
   const { id, name } = lesson
-
+  const { currentLesson } = useLesson();
+  const currentLessonId = currentLesson ? currentLesson.id : undefined
   const [isEditing, setIsEditing] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 

@@ -1,27 +1,13 @@
 import { Box, List, Skeleton, Typography } from '@mui/material';
 import { FC, memo } from 'react';
+import { useLesson } from '../../../context/lessons';
 
-import { ILesson } from '../../../models/ILesson';
 import { LessonsItem } from './LessonsItem.tsx/LessonsItem';
 
-interface LessonsListProps {
-  search: string;
-  isLoading: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-  currentLessonId?: number; 
-  lessons?: ILesson[];
-}
 
-const LessonsList: FC<LessonsListProps> = ({
-  search,
-  isLoading,
-  isSuccess,
-  lessons = [],
-  isError,
-  currentLessonId,
-}) => {
-  const lessonsIsEmpty = isSuccess && !lessons.length; 
+const LessonsList: FC = () => {
+  const { isError, isLoading, isSuccess, lessons } = useLesson();
+  const lessonsIsEmpty = isSuccess && lessons && !lessons.length; 
 
   return (
     <div>
@@ -39,7 +25,7 @@ const LessonsList: FC<LessonsListProps> = ({
       {!lessonsIsEmpty && (
         <List>
           {lessons?.map(lesson => 
-            <LessonsItem lesson={lesson} key={lesson.id} currentLessonId={currentLessonId} />
+            <LessonsItem lesson={lesson} key={lesson.id} />
           )}
         </List>
       )}

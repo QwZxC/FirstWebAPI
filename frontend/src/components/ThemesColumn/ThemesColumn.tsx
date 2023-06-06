@@ -1,15 +1,14 @@
 import { Box, Typography } from '@mui/material'
 import ThemesList from './ThemesList/ThemesList'
 import FormAddTheme from './FormAddTheme/FormAddTheme'
-import { ITheme } from '../../models/ITheme'
 import { FC } from 'react'
+import { useLesson } from '../../context/lessons'
 
-interface ThemesColumnProps {
-  themes?: ITheme[]
-  lessonId?: number
-}
 
-const ThemesColumn: FC<ThemesColumnProps> = ({ themes, lessonId }) => {
+const ThemesColumn: FC = () => {
+  const { currentLesson } = useLesson()
+  const lessonId = currentLesson ? currentLesson.id : undefined
+  const themes = currentLesson?.themes
   return (
     <>
       {lessonId ? (
