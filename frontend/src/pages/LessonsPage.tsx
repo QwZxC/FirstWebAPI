@@ -12,7 +12,7 @@ export const LessonsPage = () => {
           <Grid container spacing={2}>
             {/* Left column */}
             <Grid item xs={4}>
-              <LessonsColumn />
+              <LessonsColumn  />
             </Grid>
             {/* Left column */}
 

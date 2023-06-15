@@ -1,10 +1,20 @@
 import { FC, useState } from 'react'
 import { ITheme } from '../../../../models/ITheme'
-import { IconButton, ListItem, SxProps, Theme, Typography } from '@mui/material'
-import { Remove } from '@mui/icons-material'
+import {
+  Box,
+  Button,
+  IconButton,
+  ListItem,
+  SxProps,
+  TextField,
+  Theme,
+  Typography,
+} from '@mui/material'
+import { Create, Remove } from '@mui/icons-material'
 import { useMutation, useQueryClient } from 'react-query'
-import { deleteTheme } from '../../../../services/themes'
+import { deleteTheme, updateTheme } from '../../../../services/themes'
 import { AlertDialog } from '../../../AlertDialog/AlertDialog'
+import { ModalWindow } from './../../../ModalWindow/ModalWindow'
 
 interface ThemesItemProps {
   theme: ITheme
@@ -24,9 +34,22 @@ export const ThemesItem: FC<ThemesItemProps> = ({ theme }) => {
     },
   })
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const { mutate: updateThemeMutate } = useMutation({
+    mutationFn: updateTheme,
+    onSuccess: () => {
+      client.invalidateQueries({
+        queryKey: ['lessons'],
+      })
+    },
+  })
 
-  const deleteHandler = () => {
+
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalField, setModalField] = useState('')
+
+  const handleDelete = () => {
     if (!id) return
     setDeleteDialogOpen(true)
   }
@@ -39,6 +62,21 @@ export const ThemesItem: FC<ThemesItemProps> = ({ theme }) => {
 
   const handleDeleteDisagree = () => {
     setDeleteDialogOpen(false)
+  }
+
+  const handleOpenUpdate = () => {
+    setModalOpen(true)
+    setModalField(name)
+  }
+
+  const handleUpdateTheme = () => {
+    console.log(id)
+    const themeForUpdate: ITheme = {
+      id,
+      name: modalField,
+      lessonId: 0
+    }
+    updateThemeMutate(themeForUpdate)
   }
 
   const commonStyles: SxProps<Theme> = {
@@ -60,13 +98,34 @@ export const ThemesItem: FC<ThemesItemProps> = ({ theme }) => {
         handleAgree={handleDeleteAgree}
         handleDisagree={handleDeleteDisagree}
       />
-
+      <ModalWindow
+        open={modalOpen}
+        setOpen={setModalOpen}
+        title='Напишите название новой темы:'
+        content={
+          <Box sx={{
+            display: "flex",
+            alignItems: "center",
+          }}>
+            <TextField
+              value={modalField}
+              onChange={e => setModalField(e.target.value)}
+            />
+            <Button
+              onClick={handleUpdateTheme}
+            >Обновить</Button>
+          </Box>
+        }
+      />
       <ListItem sx={commonStyles}>
         <Typography variant='h5' component='p' sx={{ flexGrow: 1 }}>
           {name}
         </Typography>
 
-        <IconButton onClick={deleteHandler}>
+        <IconButton onClick={handleOpenUpdate}>
+          <Create />
+        </IconButton>
+        <IconButton onClick={handleDelete}>
           <Remove color='error' />
         </IconButton>
       </ListItem>
